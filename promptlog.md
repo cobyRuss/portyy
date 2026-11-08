@@ -130,4 +130,17 @@
 - Replaced fragile scroll padding with `::before` and `::after` flex spacer pseudo-elements (`flex: 0 0 calc((100% - var(--slot-w)) / 2)`) on `.depth-carousel-track`, guaranteeing the first (`01`) and last (`05` / `04`) cards can lock dead-center in the viewport.
 - Updated `setupDepthCarousel()` in [`index.html`](index.html) to compute exact center coordinates from the untransformed `.carousel-snap-slot` elements, added an `isProgrammaticScroll` lock during smooth scrolling so intermediate scroll frames cannot hijack the active selection, and locked the final `scrollLeft` position once the transition completes.
 
+---
+
+## Prompt 11 — Swipe Loop / Wrap-Around Back to Slide 01
+
+### User Prompt
+> when i reach the last certificate or project; the next swipe will go back to 1
+
+### Implementation Summary
+- Upgraded `.depth-carousel-track` inside `.depth-carousel-viewport` to a transform-driven 3D stage (`translate3d(tx, 0, 0)`) with live 1:1 touch-drag (`touchstart`/`touchmove`/`touchend`), desktop mouse drag, and horizontal trackpad wheel support.
+- Mathematically locks every chosen card (`01` through `05` / `04`) to the exact pixel center of `.depth-carousel-viewport` (`viewport.clientWidth / 2 - (slot.offsetLeft + slot.offsetWidth / 2)`), eliminating iOS Safari scroll-snap and rubber-band edge bugs.
+- When reaching the last certificate (`05 / 05`) or last project (`04 / 04`), swiping left (or dragging/scrolling forward) wraps smoothly back to `01` (`01 / 05` and `01 / 04`), and swiping right on `01` wraps to the last item.
+
+
 
