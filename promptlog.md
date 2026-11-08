@@ -178,4 +178,19 @@
 - **Tech Stack Category Badges (`renderTechStack`):** Converted each card's category badge (`Backend Framework`, `Client Logic`, etc.) from a variable-width `inline-block` span into a full-width centered pill (`flex items-center justify-center w-full h-6 px-2.5 rounded-full leading-none whitespace-nowrap truncate`) so all 10 category pills align edge-to-edge across the 2-column grid.
 - **Education, Certifications, Projects & Contact Badges:** Standardized heights (`h-6` / `h-8`), vertical centering (`inline-flex items-center justify-center leading-none whitespace-nowrap`), and 2-column symmetric tag grids (`grid grid-cols-2 sm:flex`) across `#education`, `#certifications`, `#projects`, and `#contact`.
 
+---
+
+## Prompt 15 — Mobile Slide Vertical Drift & Disappearing Navbar Fix (iOS Safari)
+
+### User Prompt
+> its nice what you did on about but i was talkin bout something entirely different, look at how the images are aligned on the folder. i cant even see the navbar anymore  
+> *(Attached: `aaa.zip` containing `1 about.jpg`, `2 education.jpg`, `3 tech stack.jpg`, `4 certificates.jpg`, `5 projects.jpg`, `6 footer.jpg`)*
+
+### Root Cause & Implementation Summary
+- **Root Cause Identified from `aaa.zip`:** On iOS Safari, Tailwind CDN's `.min-h-screen` (`min-height: 100vh`) and `.flex-grow` stretched `<body>` (`~750px`) and `#mobileViewport` (`~692px`) by ~90px past the visible viewport above Safari's bottom address bar (`100dvh` / `window.visualViewport.height`, where `.mobile-slide` was clamped to `~602px`). That 90px mismatch:
+  1. Allowed iOS Safari to scroll the document down by 90px, pushing the `56px` `<header>` navbar off the top of the screen.
+  2. Caused `wrapped * viewport.clientHeight` (`wrapped * 692px`) to overshoot each `.mobile-slide` (`wrapped * 602px`) by `90px × slideIndex` (`90px`, `180px`, `270px`, `360px`, `450px`), cutting every section in half between two slides.
+- **Fix Applied in [`index.html`](index.html):**
+  - Locked `html, body` on `< 640px` with `position: fixed !important; inset: 0 !important;` and dynamically synced `--app-h` (`visualViewport.height`) and `--slide-h` (`appH - headerH - 2`) with `!important` on both `#mobileViewport` and `.mobile-slide`, keeping `<header>` permanently visible at the top of the screen.
+  - Updated [`setupMobileVerticalDeck()`](index.html) to translate `#mobileDeck` to `-slides[wrapped].offsetTop` instead of `wrapped * viewport.clientHeight`, guaranteeing zero cumulative vertical drift across all 6 slides.
 
