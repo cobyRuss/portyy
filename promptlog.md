@@ -1,0 +1,97 @@
+# Prompt Log — Russel Tristan L. Marzo (Coby) Personal Portfolio
+
+**Project:** Single-Page Personal Portfolio Web Application (Matte PC Hardware Theme)  
+**Author:** Russel Tristan L. Marzo (Coby)  
+**Institution:** Data Center College of the Philippines — Bangued (BSIT, 4th Year)  
+**Repository:** [https://github.com/cobyRuss/eportfolio.git](https://github.com/cobyRuss/eportfolio.git)  
+**Stack:** HTML5, Tailwind CSS (via CDN), Vanilla JavaScript, Vercel Static Configuration
+
+---
+
+## Prompt 1 — Initial Portfolio Architecture & Matte PC Hardware Theme
+
+### User Prompt
+> Act as an expert frontend developer. Build a fully responsive, single-page personal portfolio web application optimized for instant deployment on Vercel. Use HTML, Tailwind CSS (via CDN), and vanilla JavaScript.
+>
+> **Design System & UI Preferences (MATTE PC HARDWARE THEME):**
+> - **Theme/Colors:**
+>   - **Background:** Strictly avoid pure black. Use a matte dark charcoal/zinc (e.g., Tailwind's `zinc-900` or `#18181b`) to resemble a premium custom PC chassis or a matte guitar amplifier.
+>   - **Accents:** Avoid harsh, eye-straining neon red. Use a soft, premium crimson/cherry red (e.g., `rose-600` or `red-600`).
+> - **Style:** Clean, hardware-inspired, and highly readable. Use subtle glassmorphism for cards (`bg-zinc-800/50`) with very thin, 1px crimson borders on hover to mimic subtle PC LED lighting or audio interface indicators. Typography should be crisp and legible (e.g., Inter or Roboto) to prevent eye fatigue.
+>
+> **Data & Content Structure (PRE-FILL THIS EXACT DATA):**
+> Create a central JavaScript data object (`const portfolioData = {...}`) at the top of your script and pre-fill it with Personal Info, Education, Technical Stack (10 items), Projects (4 items), and Certifications & Eligibility (5 items), along with uploaded media archives (`russel_certificates.zip`, `flowershop_ss.zip`, `88minimart_SS.zip`, `rgkrs.zip`, and profile picture).
+
+### Implementation Summary
+- Created [`index.html`](index.html) and [`vercel.json`](vercel.json) with the Matte PC Hardware theme (`#18181b` / `zinc-900` chassis surface, `bg-zinc-800/50` frosted glassmorphism cards, `rose-600` 1px LED hover borders, and `Inter` + `JetBrains Mono` typography).
+- Extracted all uploaded archives into `assets/profile/`, `assets/certificates/`, and `assets/projects/`.
+- Built the central `portfolioData` JavaScript object and dynamic DOM renderers for the Sticky Header, Hero/About Me section, 10-card Technical Stack grid, 5 Earned Certifications, 4 Featured Projects, and interactive Lightbox Gallery Slider Modal.
+
+---
+
+## Prompt 2 — 4th Project Integration (`student_attendance.zip`)
+
+### User Prompt
+> 4th project  
+> *(Attached: `student_attendance.zip`)*
+
+### Implementation Summary
+- Extracted `student_attendance.zip` (`1.jpg`–`5.jpg`) into `assets/projects/attendance/`.
+- Replaced the 4th project placeholder in `portfolioData.projects[3]` with **Mobile App - Offline Student Attendance System** (`Mobile Application / Offline`), including a 3-screen portrait mobile showcase on the project card header and all 5 screenshots in the interactive gallery slider.
+
+---
+
+## Prompt 3 — UI Refinements, 3D Depth Carousels & Resume PDF Button
+
+### User Prompt
+> remove this from the header img1 and footer img2--- the certificates and projects should be horizontally scrollable where the one being viewed shows closer and the others are animated to the back and replace the explore project to a My Resume Pdf Button and remove the View CErtifications butt beside it  
+> *(Attached: reference images + Resume PDF)*
+
+### Implementation Summary
+- Removed the `SYS.ONLINE` status pill from the header and the `MATTE HARDWARE UI · OPTIMIZED FOR VERCEL` line from the footer.
+- Saved the uploaded resume PDF to `assets/resume/Russel_Tristan_Marzo_Resume.pdf`, replaced the `"Explore Projects"` button with a **`My Resume PDF`** button linking to the PDF, and removed the `"View Certifications"` button beside it.
+- Converted both the **Certifications & Eligibility** and **Featured Projects** sections into horizontally scrollable 3D center-focus depth carousels (`setupDepthCarousel`), where the centered card scales forward (`.is-active-card`) and neighboring cards animate to the back (`.is-back-card` / `.is-far-card`).
+
+---
+
+## Prompt 4 — Sequential Screenshot Ordering
+
+### User Prompt
+> the projects screenshots are numbered per project, follow the sequence;
+
+### Implementation Summary
+- Updated `portfolioData.projects` so that every project's `coverImage`, `mobileShowcase`, and `gallery` array strictly follow the numbered file sequence (`1, 2, 3, ...`) for Flowershop (`1.png`–`9.png`), Registrar Grade Report Keeping System (`1.png`–`5.png`), 88 Mini System (`1.png`–`6.png`), and Offline Student Attendance System (`1.jpg`–`5.jpg`).
+
+---
+
+## Prompt 5 — Footer Looping GIF / Hardware Display Module
+
+### User Prompt
+> put this on the footer as a gif; find a spot for it that that doesnt interfere are worsen the footers aesthetics  
+> *(Attached: `YouCut_20261108_203754988.mp4`)*
+
+### Implementation Summary
+- Saved the video clip to `assets/media/footer-loop.mp4` and embedded it as a silent, seamlessly looping (`autoplay loop muted playsinline`) recessed hardware mini-display module inside the footer's 12-column grid.
+
+---
+
+## Prompt 6 — Footer Display Replacement, Resizing & Column Swap
+
+### User Prompt
+> replace it with this and make it bigger and swap places with the socials  
+> *(Attached: `VID_20261108211110.mp4`)*
+
+### Implementation Summary
+- Replaced `assets/media/footer-loop.mp4` with the newly uploaded clip (`1184 × 720`).
+- Enlarged the recessed hardware display frame (`w-64 sm:w-72 md:w-80`) and swapped its column position with the social links so the display sits in the center column (`lg:col-span-4`) and **Connect via Social Channels** sits in the right column (`lg:col-span-3`).
+
+---
+
+## Prompt 7 — GitHub Repository Push & Prompt Log Documentation
+
+### User Prompt
+> push to https://github.com/cobyRuss/eportfolio.git  
+> create promptlog md
+
+### Implementation Summary
+- Initialized the local Git repository on branch `main`, connected remote `origin` (`https://github.com/cobyRuss/eportfolio.git`), created this [`promptlog.md`](promptlog.md) documentation file, committed all project files, and pushed to GitHub.

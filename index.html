@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Russel Tristan L. Marzo (Coby) — IT Student &amp; Developer Portfolio</title>
+  <meta name="description" content="Personal portfolio of Russel Tristan L. Marzo (Coby) — Building clean, practical web applications and offline software systems with modern web technologies." />
+  <meta name="theme-color" content="#18181b" />
+
+  <!-- Google Fonts: Inter (UI & Reading) + JetBrains Mono (Hardware Readouts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            chassis: {
+              950: '#121215',
+              900: '#18181b', // Primary Matte Charcoal / Zinc-900
+              850: '#1e1e22',
+              800: '#27272a',
+              700: '#3f3f46',
+            },
+            crimson: {
+              400: '#fb7185',
+              500: '#f43f5e',
+              600: '#e11d48', // Soft premium crimson / cherry red (rose-600)
+              700: '#be123c',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Custom Matte Hardware & Subtle LED Styling */
+    :root {
+      color-scheme: dark;
+    }
+
+    body {
+      background-color: #18181b; /* Strictly matte dark charcoal/zinc, never pure black */
+      color: #f4f4f5;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Subtle anodized matte chassis mesh background */
+    .bg-matte-chassis {
+      background-color: #18181b;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(225, 29, 72, 0.055), transparent 35%),
+        radial-gradient(circle at 85% 30%, rgba(220, 38, 38, 0.04), transparent 40%),
+        linear-gradient(to bottom, rgba(39, 39, 42, 0.25) 1px, transparent 1px),
+        linear-gradient(to right, rgba(39, 39, 42, 0.25) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+    }
+
+    /* Diffused breathing LED effect for profile picture (soft, non-harsh) */
+    @keyframes softPulseLed {
+      0%, 100% {
+        box-shadow:
+          0 10px 30px -5px rgba(225, 29, 72, 0.28),
+          0 0 0 1px rgba(225, 29, 72, 0.35),
+          0 0 42px -8px rgba(220, 38, 38, 0.22);
+      }
+      50% {
+        box-shadow:
+          0 12px 38px -4px rgba(225, 29, 72, 0.42),
+          0 0 0 1px rgba(225, 29, 72, 0.55),
+          0 0 54px -6px rgba(220, 38, 38, 0.32);
+      }
+    }
+
+    .profile-led-ring {
+      animation: softPulseLed 4.5s ease-in-out infinite;
+    }
+
+    /* Hardware glassmorphism card with 1px crimson LED border on hover */
+    .hardware-card {
+      background: rgba(39, 39, 42, 0.5); /* bg-zinc-800/50 */
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(63, 63, 70, 0.65); /* zinc-700/65 */
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, background-color 0.25s ease;
+    }
+
+    .hardware-card:hover {
+      border-color: rgba(225, 29, 72, 0.75); /* 1px crimson border */
+      box-shadow:
+        0 10px 30px -10px rgba(0, 0, 0, 0.55),
+        0 0 20px -6px rgba(225, 29, 72, 0.22),
+        inset 0 1px 0 0 rgba(225, 29, 72, 0.15);
+    }
+
+    .hardware-card-interactive:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #18181b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3f3f46;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #e11d48;
+    }
+
+    /* Hide scrollbar utility for horizontal cert strip if needed */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* 3D Center-Focus Depth Carousel (Active card closer, others animated to the back) */
+    .depth-carousel-track {
+      perspective: 1200px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .depth-carousel-item {
+      scroll-snap-align: center;
+      transition:
+        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 0.35s ease,
+        box-shadow 0.45s ease;
+      will-change: transform, opacity, filter;
+    }
+
+    .depth-carousel-item.is-active-card {
+      transform: translate3d(0, 0, 0) scale(1);
+      opacity: 1;
+      filter: brightness(1);
+      z-index: 20;
+      border-color: rgba(225, 29, 72, 0.78);
+      box-shadow:
+        0 24px 48px -12px rgba(0, 0, 0, 0.75),
+        0 0 28px -6px rgba(225, 29, 72, 0.28),
+        inset 0 1px 0 0 rgba(225, 29, 72, 0.2);
+    }
+
+    .depth-carousel-item.is-back-card {
+      transform: translate3d(0, 10px, -90px) scale(0.82);
+      opacity: 0.42;
+      filter: brightness(0.7);
+      z-index: 10;
+    }
+
+    .depth-carousel-item.is-back-card:hover {
+      opacity: 0.68;
+      filter: brightness(0.85);
+      border-color: rgba(225, 29, 72, 0.45);
+    }
+
+    .depth-carousel-item.is-far-card {
+      transform: translate3d(0, 16px, -150px) scale(0.74);
+      opacity: 0.22;
+      filter: brightness(0.55);
+      z-index: 5;
+    }
+  </style>
+</head>
+<body class="bg-matte-chassis text-zinc-100 antialiased selection:bg-rose-600 selection:text-white min-h-screen flex flex-col">
+
+  <!-- Top Hardware Status Bar Accent -->
+  <div class="h-[2px] w-full bg-gradient-to-r from-zinc-800 via-rose-600/80 to-zinc-800"></div>
+
+  <!-- 1. HEADER / NAVIGATION (Sticky) -->
+  <header class="sticky top-0 z-40 bg-zinc-900/85 backdrop-blur-md border-b border-zinc-800/90 transition-colors">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Left: Minimalist text logo "Coby." with a subtle crimson dot -->
+      <a href="#top" class="group flex items-center gap-2 focus:outline-none">
+        <span class="text-xl font-bold tracking-tight text-zinc-100 group-hover:text-white transition-colors">
+          Coby<span class="text-rose-600 inline-block group-hover:scale-125 transition-transform">.</span>
+        </span>
+      </a>
+
+      <!-- Right: Desktop Navigation Links -->
+      <nav class="hidden md:flex items-center gap-1" aria-label="Primary Navigation">
+        <a href="#about" class="px-3.5 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/60 transition-all">About</a>
+        <a href="#education" class="px-3.5 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/60 transition-all">Education</a>
+        <a href="#skills" class="px-3.5 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/60 transition-all">Tech Stack</a>
+        <a href="#certifications" class="px-3.5 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/60 transition-all">Certifications</a>
+        <a href="#projects" class="px-3.5 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/60 transition-all">Projects</a>
+        <a href="#contact" class="ml-2 px-4 py-2 rounded-lg text-sm font-medium bg-zinc-800/90 text-zinc-100 border border-zinc-700/80 hover:border-rose-600/80 hover:text-white hover:shadow-[0_0_15px_-3px_rgba(225,29,72,0.35)] transition-all flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
+          Contact
+        </a>
+      </nav>
+
+      <!-- Mobile Hamburger Button -->
+      <button
+        id="mobileMenuBtn"
+        type="button"
+        aria-label="Toggle Navigation Menu"
+        aria-expanded="false"
+        class="md:hidden inline-flex items-center justify-center p-2 rounded-lg bg-zinc-800/70 border border-zinc-700/70 text-zinc-300 hover:text-white hover:border-rose-600/70 focus:outline-none transition-all"
+      >
+        <svg id="hamburgerIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg id="closeMenuIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileMenu" class="hidden md:hidden bg-zinc-900/95 backdrop-blur-lg border-b border-zinc-800 px-4 pt-2 pb-4 space-y-1">
+      <a href="#about" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/70 transition-colors">About Me</a>
+      <a href="#education" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/70 transition-colors">Education</a>
+      <a href="#skills" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/70 transition-colors">Tech Stack</a>
+      <a href="#certifications" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/70 transition-colors">Certifications</a>
+      <a href="#projects" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/70 transition-colors">Projects</a>
+      <a href="#contact" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-rose-400 hover:text-rose-300 hover:bg-zinc-800/70 transition-colors">Contact &amp; Socials</a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main id="top" class="flex-grow">
+
+    <!-- 2. HERO / ABOUT ME SECTION -->
+    <section id="about" class="relative pt-12 pb-16 sm:pt-20 sm:pb-24">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Hero Intro Block -->
+        <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-14">
+
+          <!-- Circular Profile Picture Placeholder / Avatar with Soft Diffused Crimson Drop-Shadow -->
+          <div class="relative flex-shrink-0">
+            <div class="w-40 h-40 sm:w-48 sm:h-48 rounded-full p-1.5 bg-gradient-to-b from-zinc-700/80 via-rose-600/40 to-zinc-800 profile-led-ring">
+              <div class="w-full h-full rounded-full overflow-hidden bg-zinc-800 border border-zinc-700/80 relative">
+                <img
+                  id="heroProfileImg"
+                  src="assets/profile/profile.jpg"
+                  alt="Russel Tristan L. Marzo (Coby)"
+                  class="w-full h-full object-cover object-center"
+                  onerror="this.style.display='none'; document.getElementById('heroProfileFallback').classList.remove('hidden');"
+                />
+                <div id="heroProfileFallback" class="hidden w-full h-full flex flex-col items-center justify-center bg-zinc-800 text-zinc-300">
+                  <span class="text-3xl font-bold text-rose-500 font-mono">RM</span>
+                  <span class="text-[11px] font-mono text-zinc-400 mt-1">COBY</span>
+                </div>
+              </div>
+            </div>
+            <!-- Hardware Status Indicator Pill on Avatar -->
+            <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-zinc-900/95 border border-zinc-700/90 shadow-lg flex items-center gap-1.5 whitespace-nowrap">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="text-[11px] font-mono font-medium text-zinc-300 tracking-wide">BANGUED, ABRA</span>
+            </div>
+          </div>
+
+          <!-- Hero Text Content -->
+          <div class="text-center lg:text-left flex-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-800/80 border border-zinc-700/70 mb-4">
+              <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+              <span id="heroTitleBadge" class="text-xs font-mono uppercase tracking-wider text-zinc-300"></span>
+            </div>
+
+            <h1 id="heroName" class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight"></h1>
+
+            <p id="heroHeadline" class="mt-4 text-base sm:text-lg lg:text-xl text-zinc-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal"></p>
+
+            <!-- Compact Pill-Shaped Tech Stack Summary Tags + Quick Actions -->
+            <div id="heroStackPills" class="mt-5 flex flex-wrap items-center justify-center lg:justify-start gap-1.5"></div>
+
+            <div class="mt-7 flex flex-wrap items-center justify-center lg:justify-start gap-3">
+              <a
+                id="heroResumeBtn"
+                href="assets/resume/Russel_Tristan_Marzo_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="px-5 py-2.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-medium text-sm shadow-[0_6px_20px_-4px_rgba(225,29,72,0.5)] hover:shadow-[0_8px_25px_-3px_rgba(225,29,72,0.65)] transition-all flex items-center gap-2"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span>My Resume PDF</span>
+              </a>
+              <a id="heroGithubBtn" href="#" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-lg bg-zinc-800/50 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-700/60 hover:border-rose-600/60 font-mono text-xs transition-all flex items-center gap-2">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                </svg>
+                <span>github.com/cobyRuss</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two Balanced Dark-Matte Cards Below the Intro (Bio & Education) -->
+        <div id="education" class="mt-14 grid grid-cols-1 md:grid-cols-2 gap-6 scroll-mt-24">
+
+          <!-- Card 1: Biography / System Profile -->
+          <div class="hardware-card rounded-xl p-6 sm:p-7 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between border-b border-zinc-700/60 pb-3.5 mb-4">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+                  <h2 class="text-sm font-mono uppercase tracking-wider text-zinc-200 font-semibold">01 // Developer Profile</h2>
+                </div>
+                <span class="text-[11px] font-mono text-zinc-400 bg-zinc-900/70 px-2 py-0.5 rounded border border-zinc-700/60">BIO.SYS</span>
+              </div>
+              <p id="bioText" class="text-zinc-300 text-sm sm:text-base leading-relaxed"></p>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-zinc-700/50 grid grid-cols-2 gap-3 text-xs">
+              <div class="bg-zinc-900/60 rounded-lg p-3 border border-zinc-800">
+                <span class="text-zinc-400 font-mono block text-[11px]">PRIMARY FOCUS</span>
+                <span class="text-zinc-100 font-medium mt-0.5 block">Web &amp; Offline Systems</span>
+              </div>
+              <div class="bg-zinc-900/60 rounded-lg p-3 border border-zinc-800">
+                <span class="text-zinc-400 font-mono block text-[11px]">ELIGIBILITY</span>
+                <span class="text-emerald-400 font-medium mt-0.5 block">CSC Professional</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Education -->
+          <div class="hardware-card rounded-xl p-6 sm:p-7 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between border-b border-zinc-700/60 pb-3.5 mb-4">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+                  <h2 class="text-sm font-mono uppercase tracking-wider text-zinc-200 font-semibold">02 // Academic Specification</h2>
+                </div>
+                <span class="text-[11px] font-mono text-zinc-400 bg-zinc-900/70 px-2 py-0.5 rounded border border-zinc-700/60">EDU.LOG</span>
+              </div>
+
+              <div class="flex items-start gap-4">
+                <div class="w-11 h-11 rounded-lg bg-rose-600/15 border border-rose-600/40 flex items-center justify-center text-rose-500 flex-shrink-0 mt-0.5">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 14l9-5-9-5-9 5 9 5z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 id="eduDegree" class="text-base sm:text-lg font-bold text-white"></h3>
+                  <p id="eduInstitution" class="text-sm text-zinc-300 mt-1"></p>
+                  <p id="eduCampus" class="text-xs font-mono text-zinc-400 mt-1"></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-zinc-700/50 flex items-center justify-between">
+              <span class="text-xs font-mono text-zinc-400">ENROLLMENT STATUS</span>
+              <span id="eduStatus" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-rose-600/15 text-rose-400 border border-rose-600/40"></span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SKILLS & CERTIFICATIONS SECTION -->
+    <section id="skills" class="py-16 border-t border-zinc-800/80 scroll-mt-16">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Tech Stack Header -->
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+          <div>
+            <div class="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-rose-500 mb-2">
+              <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+              <span>Hardware &amp; Software Modules</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Technical Stack</h2>
+          </div>
+          <p class="text-sm text-zinc-400 font-mono">10 CORE TECHNOLOGIES // HOVER FOR LED DIAGNOSTICS</p>
+        </div>
+
+        <!-- 10 Tech Stack Cards Grid with Subtle Red Edge Illumination on Hover -->
+        <div id="techStackGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 sm:gap-4"></div>
+
+        <!-- Certifications Subsection (Horizontally Scrollable Center-Focus Depth Carousel) -->
+        <div id="certifications" class="mt-20 scroll-mt-24">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4">
+            <div>
+              <div class="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-rose-500 mb-2">
+                <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+                <span>Verified Credentials</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Certifications &amp; Eligibility</h2>
+            </div>
+
+            <!-- Carousel Controls for Certifications -->
+            <div class="flex items-center gap-3">
+              <span id="certCarouselCounter" class="text-xs font-mono text-zinc-400 bg-zinc-800/80 px-2.5 py-1 rounded border border-zinc-700/70">01 / 05</span>
+              <div class="flex items-center gap-1.5">
+                <button
+                  id="certPrevBtn"
+                  type="button"
+                  aria-label="Previous Certificate"
+                  class="p-2 rounded-lg bg-zinc-800/80 hover:bg-rose-600 text-zinc-300 hover:text-white border border-zinc-700 hover:border-rose-500 transition-all"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  id="certNextBtn"
+                  type="button"
+                  aria-label="Next Certificate"
+                  class="p-2 rounded-lg bg-zinc-800/80 hover:bg-rose-600 text-zinc-300 hover:text-white border border-zinc-700 hover:border-rose-500 transition-all"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Horizontally Scrollable 3D Depth Track for the 5 Certificate Items -->
+          <div class="relative">
+            <div
+              id="certificationsGrid"
+              class="depth-carousel-track flex items-center overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar py-6 px-[7vw] sm:px-[calc(50%-210px)] md:px-[calc(50%-230px)] gap-2 sm:gap-4"
+            ></div>
+            <div id="certCarouselDots" class="mt-2 flex items-center justify-center gap-2"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 4. PROJECTS SECTION (Horizontally Scrollable Center-Focus Depth Carousel) -->
+    <section id="projects" class="py-16 border-t border-zinc-800/80 scroll-mt-16">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4">
+          <div>
+            <div class="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-rose-500 mb-2">
+              <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+              <span>Deployed &amp; Offline Systems</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Featured Projects</h2>
+          </div>
+
+          <!-- Carousel Controls for Projects -->
+          <div class="flex items-center gap-3">
+            <span id="projCarouselCounter" class="text-xs font-mono text-zinc-400 bg-zinc-800/80 px-2.5 py-1 rounded border border-zinc-700/70">01 / 04</span>
+            <div class="flex items-center gap-1.5">
+              <button
+                id="projPrevBtn"
+                type="button"
+                aria-label="Previous Project"
+                class="p-2 rounded-lg bg-zinc-800/80 hover:bg-rose-600 text-zinc-300 hover:text-white border border-zinc-700 hover:border-rose-500 transition-all"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                id="projNextBtn"
+                type="button"
+                aria-label="Next Project"
+                class="p-2 rounded-lg bg-zinc-800/80 hover:bg-rose-600 text-zinc-300 hover:text-white border border-zinc-700 hover:border-rose-500 transition-all"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Horizontally Scrollable 3D Depth Track of 4 Project Cards -->
+        <div class="relative">
+          <div
+            id="projectsGrid"
+            class="depth-carousel-track flex items-stretch overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar py-6 px-[6vw] sm:px-[calc(50%-230px)] md:px-[calc(50%-260px)] gap-2 sm:gap-4"
+          ></div>
+          <div id="projCarouselDots" class="mt-2 flex items-center justify-center gap-2"></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 5. CONTACT / FOOTER -->
+  <footer id="contact" class="border-t border-zinc-800 bg-zinc-900/90 backdrop-blur-md mt-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-14">
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-10 border-b border-zinc-800/90 items-center">
+        <!-- Brand & Direct Contact -->
+        <div class="lg:col-span-5 space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl font-bold tracking-tight text-white">Coby<span class="text-rose-600">.</span></span>
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700/70">PORTFOLIO v2026</span>
+          </div>
+          <p class="text-zinc-400 text-sm max-w-xl">
+            Available for internship opportunities, software development collaborations, web application builds, and offline desktop system projects.
+          </p>
+
+          <!-- Direct Email & Phone Chips -->
+          <div class="pt-2 flex flex-wrap items-center gap-3">
+            <a id="footerEmail" href="#" class="hardware-card inline-flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm text-zinc-200 hover:text-white group">
+              <svg class="w-4 h-4 text-zinc-400 group-hover:text-rose-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span id="footerEmailText" class="font-mono text-xs sm:text-sm"></span>
+            </a>
+
+            <a id="footerPhone" href="#" class="hardware-card inline-flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm text-zinc-200 hover:text-white group">
+              <svg class="w-4 h-4 text-zinc-400 group-hover:text-rose-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <span id="footerPhoneText" class="font-mono text-xs sm:text-sm"></span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Recessed Hardware Display Panel (Larger & Swapped to Center Column) -->
+        <div class="lg:col-span-4 flex justify-start lg:justify-center">
+          <div class="hardware-card p-1.5 rounded-xl bg-zinc-900/90 border border-zinc-700/80 shadow-inner w-64 sm:w-72 md:w-80 group">
+            <div class="relative aspect-[1184/720] w-full rounded-lg overflow-hidden bg-zinc-950 border border-zinc-800">
+              <video
+                src="assets/media/footer-loop.mp4?v=2"
+                autoplay
+                loop
+                muted
+                playsinline
+                disablePictureInPicture
+                class="w-full h-full object-cover pointer-events-none opacity-95 group-hover:opacity-100 transition-opacity duration-300"
+              ></video>
+              <span class="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-rose-600/90 shadow-[0_0_6px_rgba(225,29,72,0.8)]"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Social Links using Sleek Monochrome Icons that turn Crimson on Hover (Swapped to Right Column) -->
+        <div class="lg:col-span-3 flex flex-col lg:items-end justify-center">
+          <span class="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-3">Connect via Social Channels</span>
+          <div id="footerSocials" class="flex items-center gap-3"></div>
+        </div>
+      </div>
+
+      <!-- Bottom Copyright Line -->
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-400">
+        <p id="footerCopyright" class="font-medium text-zinc-400">© 2026 Russel Tristan L. Marzo · Coby. All rights reserved.</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- INTERACTIVE GALLERY SLIDER MODAL (For Projects & Certificates) -->
+  <div
+    id="galleryModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-zinc-950/90 backdrop-blur-md p-3 sm:p-6"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalTitle"
+  >
+    <div class="hardware-card w-full max-w-5xl rounded-2xl overflow-hidden border border-zinc-700/80 shadow-2xl flex flex-col max-h-[92vh]">
+
+      <!-- Modal Top Bar -->
+      <div class="px-4 sm:px-6 py-3.5 bg-zinc-900/90 border-b border-zinc-800 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3 min-w-0">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-600 flex-shrink-0"></span>
+          <div class="truncate">
+            <h3 id="modalTitle" class="text-sm sm:text-base font-bold text-white truncate"></h3>
+            <p id="modalCategory" class="text-[11px] font-mono text-rose-400 uppercase tracking-wider"></p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span id="modalCounter" class="px-2.5 py-1 rounded bg-zinc-800 border border-zinc-700 text-xs font-mono text-zinc-300">1 / 1</span>
+          <button
+            id="closeModalBtn"
+            type="button"
+            aria-label="Close Gallery Modal"
+            class="p-2 rounded-lg bg-zinc-800/80 hover:bg-rose-600 text-zinc-300 hover:text-white border border-zinc-700 hover:border-rose-500 transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Main Slide Viewport -->
+      <div class="relative flex-1 bg-zinc-900/95 flex items-center justify-center min-h-[280px] sm:min-h-[440px] max-h-[65vh] overflow-hidden select-none">
+        <img
+          id="modalSlideImage"
+          src=""
+          alt=""
+          class="max-h-[63vh] max-w-full w-auto h-auto object-contain transition-opacity duration-200"
+        />
+
+        <!-- Custom Placeholder SVG when viewing the 4th placeholder project -->
+        <div id="modalPlaceholderGraphic" class="hidden flex-col items-center justify-center p-8 text-center max-w-md">
+          <div class="w-16 h-16 rounded-2xl bg-rose-600/15 border border-rose-600/40 flex items-center justify-center text-rose-500 mb-4">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+          </div>
+          <p class="text-base font-semibold text-white">Project Slot #04 Reserved</p>
+          <p class="text-xs text-zinc-400 mt-2 leading-relaxed">
+            Add your 4th project details and screenshot paths inside <code class="text-rose-400 font-mono">portfolioData.projects[3]</code> to populate this gallery slider automatically.
+          </p>
+        </div>
+
+        <!-- Prev Slide Button -->
+        <button
+          id="prevSlideBtn"
+          type="button"
+          aria-label="Previous Image"
+          class="absolute left-3 sm:left-5 p-2.5 sm:p-3 rounded-full bg-zinc-900/85 hover:bg-rose-600 text-zinc-200 hover:text-white border border-zinc-700 hover:border-rose-500 shadow-lg transition-all focus:outline-none"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <!-- Next Slide Button -->
+        <button
+          id="nextSlideBtn"
+          type="button"
+          aria-label="Next Image"
+          class="absolute right-3 sm:right-5 p-2.5 sm:p-3 rounded-full bg-zinc-900/85 hover:bg-rose-600 text-zinc-200 hover:text-white border border-zinc-700 hover:border-rose-500 shadow-lg transition-all focus:outline-none"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Caption & Thumbnail Strip -->
+      <div class="px-4 sm:px-6 py-3.5 bg-zinc-900 border-t border-zinc-800 space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+          <p id="modalCaption" class="text-xs sm:text-sm font-medium text-zinc-200"></p>
+          <span class="text-[11px] font-mono text-zinc-500">USE ← → ARROW KEYS OR CLICK THUMBNAILS</span>
+        </div>
+        <div id="modalThumbnails" class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CENTRAL JAVASCRIPT DATA & APPLICATION LOGIC -->
+  <script>
+    /**
+     * CENTRAL PORTFOLIO DATA OBJECT
+     * Pre-filled with exact personal info, education, technical stack, 4 projects, and 5 certifications.
+     */
+    const portfolioData = {
+      personalInfo: {
+        name: "Russel Tristan L. Marzo (Coby)",
+        title: "IT Student & Aspiring Developer",
+        email: "coby.2339@gmail.com",
+        phone: "09357591816",
+        github: "https://github.com/cobyRuss",
+        facebook: "https://www.facebook.com/llcoby/",
+        messenger: "https://www.m.me/llcoby",
+        instagram: "https://www.instagram.com/cobymarzo/",
+        headline: "Building clean, practical web applications and offline software systems with modern web technologies.",
+        bio: "A dedicated Information Technology student at Data Center College of the Philippines - Bangued, passionate about software development and web technologies. Currently building skills in web development, programming, and system administration.",
+        profileImage: "assets/profile/profile.jpg"
+      },
+
+      education: {
+        institution: "Data Center College of the Philippines",
+        campus: "Bangued",
+        degree: "Bachelor of Science in Information Technology",
+        status: "4th Year - Currently Enrolled"
+      },
+
+      technicalStack: [
+        { name: "Laravel", category: "Backend Framework", code: "FW-01" },
+        { name: "PHP", category: "Server Scripting", code: "LG-02" },
+        { name: "HTML5", category: "Semantic Markup", code: "UI-03" },
+        { name: "CSS3", category: "Styling & Layout", code: "UI-04" },
+        { name: "JavaScript", category: "Client Logic", code: "LG-05" },
+        { name: "MySQL", category: "Relational DB", code: "DB-06" },
+        { name: "SQLite", category: "Embedded DB", code: "DB-07" },
+        { name: "Git & GitHub", category: "Version Control", code: "VC-08" },
+        { name: "VS Code", category: "Development IDE", code: "TL-09" },
+        { name: "XAMPP", category: "Local Server Stack", code: "SV-10" }
+      ],
+
+      projects: [
+        {
+          id: "flowershop-web-app",
+          title: "Web App - Flowershop Online Website",
+          category: "Web Application",
+          tags: ["PHP", "MySQL", "JavaScript", "HTML5", "CSS3"],
+          description: "Full-featured online flower shop and custom bouquet builder for HappyStem by Carmencita (Bangued, Abra), featuring an interactive bouquet customizer, event gallery, GCash checkout, and an admin price-fluctuation cascading tool.",
+          coverImage: "assets/projects/flowershop/1.png",
+          gallery: [
+            { src: "assets/projects/flowershop/1.png", caption: "1. Customer Registration & Account Onboarding" },
+            { src: "assets/projects/flowershop/2.png", caption: "2. Landing Page Hero & Floral Catalogue — HappyStem by Carmencita" },
+            { src: "assets/projects/flowershop/3.png", caption: "3. Flower Shop Catalogue & Category Filtering" },
+            { src: "assets/projects/flowershop/4.png", caption: "4. Tailored Floral Services (Weddings, Events & Corporate)" },
+            { src: "assets/projects/flowershop/5.png", caption: "5. Events & Celebrations Portfolio Lightbox Gallery" },
+            { src: "assets/projects/flowershop/6.png", caption: "6. Interactive 'Design Your Own Bouquet' Customizer" },
+            { src: "assets/projects/flowershop/7.png", caption: "7. Store Location & Google Maps Integration (Bangued, Abra)" },
+            { src: "assets/projects/flowershop/8.png", caption: "8. HappyStem Administrator Portal Authentication" },
+            { src: "assets/projects/flowershop/9.png", caption: "9. Admin Dashboard & Dynamic Flower Price Fluctuation Adjuster" }
+          ]
+        },
+        {
+          id: "registrar-grade-system",
+          title: "Registrar Grade Report Keeping System",
+          category: "Offline Application",
+          tags: ["Desktop App", "SQLite", "Offline System", "Transcripts"],
+          description: "Offline school registrar record-keeping application engineered for secure student enrollment tracking, curriculum & subject management, and automated General Weighted Average (GWA) transcript generation.",
+          coverImage: "assets/projects/rgkrs/1.png",
+          gallery: [
+            { src: "assets/projects/rgkrs/1.png", caption: "1. Administrator Authentication Window (Authorized Access)" },
+            { src: "assets/projects/rgkrs/2.png", caption: "2. Registrar Dashboard Overview — Active, Graduated & Course Metrics" },
+            { src: "assets/projects/rgkrs/3.png", caption: "3. Student Management Module — Add, Filter & Update Student Records" },
+            { src: "assets/projects/rgkrs/4.png", caption: "4. Grade Records & Student Transcript Generator with Print Preview" },
+            { src: "assets/projects/rgkrs/5.png", caption: "5. Subject & Curriculum Management (BSCS, BSIT, BSED, BSBA)" }
+          ]
+        },
+        {
+          id: "desktop-88-mini-system",
+          title: "Desktop App - 88 Mini System",
+          category: "Desktop Application / POS",
+          tags: ["POS Terminal", "Inventory", "Cash Drawer", "Analytics"],
+          description: "Comprehensive Point of Sale (POS) and store management system for 88 Mini Mart with barcode/product keypad checkout, GCash & Senior/PWD discounts, shift cash-drawer reconciliation, and real-time profit analytics.",
+          coverImage: "assets/projects/minimart88/1.png",
+          gallery: [
+            { src: "assets/projects/minimart88/1.png", caption: "1. 88 Mini Mart Store Administrator Sign-In Screen" },
+            { src: "assets/projects/minimart88/2.png", caption: "2. POS Checkout Terminal — Live Ticket, Product Grid & Numeric Keypad" },
+            { src: "assets/projects/minimart88/3.png", caption: "3. Sales Receipts History, Filtering & Refund Processing" },
+            { src: "assets/projects/minimart88/4.png", caption: "4. End-of-Shift Cash Drawer Count & Discrepancy Reconciliation" },
+            { src: "assets/projects/minimart88/5.png", caption: "5. Store Administrator Dashboard — Sales Trends, Best Sellers & Profit Margin" },
+            { src: "assets/projects/minimart88/6.png", caption: "6. Product Catalog Management & Low-Stock Threshold Indicators" }
+          ]
+        },
+        {
+          id: "offline-student-attendance-app",
+          title: "Mobile App - Offline Student Attendance System",
+          category: "Mobile Application / Offline",
+          tags: ["Mobile App", "SQLite", "Offline-First", "Attendance Tracking"],
+          description: "Offline-first mobile class attendance tracker designed for academic sessions (ITCS 4A / Mobile Technology 4A), featuring real-time daily check-in metrics, one-tap Present/Absent/Late/Excused logging, and searchable student attendance history.",
+          coverImage: "assets/projects/attendance/1.jpg",
+          mobileShowcase: [
+            "assets/projects/attendance/1.jpg",
+            "assets/projects/attendance/2.jpg",
+            "assets/projects/attendance/3.jpg"
+          ],
+          gallery: [
+            { src: "assets/projects/attendance/1.jpg", caption: "1. Offline Attendance Application Splash Screen & Brand Emblem" },
+            { src: "assets/projects/attendance/2.jpg", caption: "2. Offline Workspace Home Dashboard — Daily Check-In Summary & Quick Actions" },
+            { src: "assets/projects/attendance/3.jpg", caption: "3. Session Filter Setup — Academic Year, Class (ITCS 4-A) & Subject Selection" },
+            { src: "assets/projects/attendance/4.jpg", caption: "4. Attendance History & Student Record Search with Date Filtering" },
+            { src: "assets/projects/attendance/5.jpg", caption: "5. Live Session Attendance Recording — One-Tap Present, Absent, Late & Excused" }
+          ]
+        }
+      ],
+
+      certifications: [
+        {
+          id: "cert-1",
+          title: "Civil Service Professional",
+          date: "Eligibility, 2023",
+          issuer: "Civil Service Commission (CSC CSEVS)",
+          status: "Earned",
+          image: "assets/certificates/1.png",
+          placeholderNote: ""
+        },
+        {
+          id: "cert-2",
+          title: "DOST Startup Cordillera",
+          date: "September 2, 2026",
+          issuer: "DOST-CAR Innovation Hub (iHub)",
+          status: "Earned",
+          image: "assets/certificates/2.png",
+          placeholderNote: ""
+        },
+        {
+          id: "cert-3",
+          title: "Online Safety Through Netiquette",
+          date: "July 23, 2026",
+          issuer: "DICT Region II — Cybersecurity",
+          status: "Earned",
+          image: "assets/certificates/3.png",
+          placeholderNote: ""
+        },
+        {
+          id: "cert-4",
+          title: "Introduction to Modern AI",
+          date: "October 30, 2026",
+          issuer: "Cisco Networking Academy · DICT-ITU DTC",
+          status: "Earned",
+          image: "assets/certificates/4.jpg",
+          placeholderNote: "[Certificate #4]"
+        },
+        {
+          id: "cert-5",
+          title: "Understanding Startups & Philippine Startup Challenge XI",
+          date: "September 7, 2026",
+          issuer: "DICT Cordillera Administrative Region",
+          status: "Earned",
+          image: "assets/certificates/5.jpg",
+          placeholderNote: "[Certificate #5]"
+        }
+      ]
+    };
+
+    /**
+     * SVG Icon Lookup for the 10 Tech Stack Items
+     */
+    function getTechIcon(name) {
+      const icons = {
+        "Laravel": `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>`,
+        "PHP": `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="12" rx="10" ry="6"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 14l1-4h1.5a1.5 1.5 0 010 3H8.5M14 14l1-4h1.5a1.5 1.5 0 010 3H14.5"/></svg>`,
+        "HTML5": `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M4 3h16l-1.5 15L12 21l-6.5-3L4 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h8l-.5 4.5H9.5l.25 2.5L12 14.75l2.25-.75.2-2"/></svg>`,
+        "CSS3": `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M4 3h16l-1.5 15L12 21l-6.5-3L4 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M8.5 7h7l-.5 4H9.5l.5 3.5 2 .5 2-.5.25-2"/></svg>`,
+        "JavaScript": `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="3"/><path stroke-linecap="round" stroke-linejoin="round" d="M10 10v5a1.5 1.5 0 01-3 0M14 15.5c.5.5 1.2.7 2 .5.8-.2 1.2-.9 1-1.6-.2-.7-1-.9-1.8-1.2-.8-.3-1.2-.8-1-1.5.2-.7 1-1.1 1.8-.9.6.1 1 .4 1.3.8"/></svg>`,
+        "MySQL": `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="5" rx="8" ry="3"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg>`,
+        "SQLite": `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7a2 2 0 012-2h12a2 2 0 012 2v3a2 2 0 01-2 2H6a2 2 0 01-2-2V7zM4 14a2 2 0 012-2h12a2 2 0 012 2v3a2 2 0 01-2 2H6a2 2 0 01-2-2v-3z"/><circle cx="8" cy="8.5" r="1" fill="currentColor"/><circle cx="8" cy="15.5" r="1" fill="currentColor"/></svg>`,
+        "Git & GitHub": `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 8.5v7M18 8.5c0 4-3 5.5-12 5.5"/></svg>`,
+        "VS Code": `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M16 3l5 2.5v13L16 21l-9-7-4 3-1-1.5V8.5L3 7l4 3 9-7z"/></svg>`,
+        "XAMPP": `<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="18" height="16" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="M7 9l3 3-3 3M12 15h4"/></svg>`
+      };
+      return icons[name] || icons["VS Code"];
+    }
+
+    /**
+     * Render Personal Info & Education into DOM
+     */
+    function renderProfileAndEducation() {
+      const { personalInfo, education, technicalStack } = portfolioData;
+
+      document.getElementById("heroName").textContent = personalInfo.name;
+      document.getElementById("heroTitleBadge").textContent = personalInfo.title;
+      document.getElementById("heroHeadline").textContent = `"${personalInfo.headline}"`;
+      document.getElementById("bioText").textContent = personalInfo.bio;
+      document.getElementById("heroGithubBtn").href = personalInfo.github;
+
+      const profileImg = document.getElementById("heroProfileImg");
+      if (personalInfo.profileImage) {
+        profileImg.src = personalInfo.profileImage;
+      }
+
+      // Render compact pill-shaped tags in Hero
+      const heroStackPills = document.getElementById("heroStackPills");
+      heroStackPills.innerHTML = technicalStack
+        .map(
+          (item) => `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-zinc-800/75 text-zinc-200 border border-zinc-700/70 hover:border-rose-600/70 hover:text-white transition-colors">
+            <span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
+            ${item.name}
+          </span>
+        `
+        )
+        .join("");
+
+      // Education Card
+      document.getElementById("eduDegree").textContent = education.degree;
+      document.getElementById("eduInstitution").textContent = education.institution;
+      document.getElementById("eduCampus").textContent = `CAMPUS // ${education.campus.toUpperCase()}`;
+      document.getElementById("eduStatus").innerHTML = `
+        <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+        ${education.status}
+      `;
+    }
+
+    /**
+     * Render 10 Tech Stack Cards with Subtle Red Edge Illumination on Hover
+     */
+    function renderTechStack() {
+      const grid = document.getElementById("techStackGrid");
+      grid.innerHTML = portfolioData.technicalStack
+        .map(
+          (tech) => `
+          <div class="hardware-card hardware-card-interactive rounded-xl p-4 flex flex-col justify-between group cursor-default">
+            <div class="flex items-center justify-between mb-3">
+              <div class="w-9 h-9 rounded-lg bg-zinc-900/90 border border-zinc-700/70 group-hover:border-rose-600/60 flex items-center justify-center text-zinc-300 group-hover:text-rose-500 transition-colors">
+                ${getTechIcon(tech.name)}
+              </div>
+              <span class="text-[10px] font-mono text-zinc-500 group-hover:text-rose-400 transition-colors">${tech.code}</span>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-zinc-100 group-hover:text-white transition-colors">${tech.name}</h3>
+              <span class="inline-block mt-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-zinc-900/80 text-zinc-400 border border-zinc-700/60 group-hover:border-rose-600/40 group-hover:text-zinc-300 transition-colors">
+                ${tech.category}
+              </span>
+            </div>
+          </div>
+        `
+        )
+        .join("");
+    }
+
+    /**
+     * Render 5 Certifications & Eligibility Items in Horizontally Scrollable 3D Depth Carousel
+     */
+    function renderCertifications() {
+      const grid = document.getElementById("certificationsGrid");
+      grid.innerHTML = portfolioData.certifications
+        .map(
+          (cert, idx) => `
+          <article
+            data-carousel-index="${idx}"
+            onclick="handleCardClick('cert', ${idx}, event)"
+            class="depth-carousel-item hardware-card flex-shrink-0 w-[82vw] sm:w-[400px] md:w-[440px] rounded-2xl overflow-hidden flex flex-col justify-between cursor-pointer group select-none"
+          >
+            <div>
+              <!-- Certificate Image Preview -->
+              <div class="relative h-52 sm:h-56 bg-zinc-900/90 border-b border-zinc-800 overflow-hidden flex items-center justify-center p-3">
+                <img
+                  src="${cert.image}"
+                  alt="${cert.title}"
+                  loading="lazy"
+                  class="w-full h-full object-contain rounded group-hover:scale-[1.03] transition-transform duration-300"
+                />
+                <!-- Small Green "Earned" Badge -->
+                <span class="absolute top-3 right-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-zinc-900/90 text-emerald-400 border border-emerald-500/40 shadow-md">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  ${cert.status}
+                </span>
+                <span class="absolute bottom-2.5 left-3 px-2 py-0.5 rounded bg-zinc-900/85 border border-zinc-700/70 text-[10px] font-mono text-zinc-400">
+                  CERT-0${idx + 1}
+                </span>
+              </div>
+
+              <!-- Certificate Info -->
+              <div class="p-5 sm:p-6">
+                <div class="flex items-center justify-between gap-2 text-xs font-mono text-zinc-400 mb-1.5">
+                  <span>${cert.date}</span>
+                </div>
+                <h3 class="text-base sm:text-lg font-bold text-zinc-100 group-hover:text-white transition-colors leading-snug">
+                  ${cert.title}
+                </h3>
+                <p class="text-xs sm:text-sm text-zinc-400 mt-1.5">${cert.issuer}</p>
+              </div>
+            </div>
+
+            <div class="px-5 sm:px-6 pb-4 pt-3 border-t border-zinc-800/70 flex items-center justify-between text-xs">
+              <span class="font-mono text-zinc-500">VERIFIED CREDENTIAL</span>
+              <button
+                type="button"
+                onclick="event.stopPropagation(); openCertificateModal(${idx});"
+                class="font-semibold text-rose-500 hover:text-rose-400 flex items-center gap-1 transition-colors focus:outline-none"
+              >
+                Inspect Certificate →
+              </button>
+            </div>
+          </article>
+        `
+        )
+        .join("");
+    }
+
+    /**
+     * Render 4 Project Cards in Horizontally Scrollable 3D Depth Carousel
+     */
+    function renderProjects() {
+      const grid = document.getElementById("projectsGrid");
+      grid.innerHTML = portfolioData.projects
+        .map(
+          (project, index) => `
+          <article
+            data-carousel-index="${index}"
+            onclick="handleCardClick('proj', ${index}, event)"
+            class="depth-carousel-item hardware-card flex-shrink-0 w-[85vw] sm:w-[440px] md:w-[500px] rounded-2xl overflow-hidden flex flex-col justify-between cursor-pointer group select-none"
+          >
+            <div>
+              <!-- Project Image Preview / Placeholder -->
+              <div
+                class="relative h-56 sm:h-64 bg-zinc-900 border-b border-zinc-800 overflow-hidden flex items-center justify-center"
+              >
+                ${
+                  project.mobileShowcase && project.mobileShowcase.length
+                    ? `<div class="w-full h-full bg-zinc-900/95 flex items-center justify-center gap-3 px-6 pt-6 pb-2 group-hover:scale-[1.02] transition-transform duration-500">
+                        ${project.mobileShowcase
+                          .map(
+                            (imgSrc, mIdx) => `
+                            <div class="h-full aspect-[9/19] rounded-xl overflow-hidden border border-zinc-700/80 shadow-xl ${
+                              mIdx === 1 ? "scale-105 z-10 border-rose-600/50" : "opacity-85"
+                            }">
+                              <img src="${imgSrc}" alt="${project.title} screen ${mIdx + 1}" loading="lazy" class="w-full h-full object-cover object-top" />
+                            </div>
+                          `
+                          )
+                          .join("")}
+                      </div>
+                      <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity pointer-events-none"></div>`
+                    : project.coverImage && !project.isPlaceholder
+                    ? `<img
+                        src="${project.coverImage}"
+                        alt="${project.title}"
+                        loading="lazy"
+                        class="w-full h-full object-cover object-top group-hover:scale-[1.03] transition-transform duration-500"
+                      />
+                      <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent opacity-70 group-hover:opacity-40 transition-opacity"></div>`
+                    : `<div class="flex flex-col items-center justify-center text-center p-6">
+                        <div class="w-12 h-12 rounded-xl bg-zinc-800 border border-zinc-700 group-hover:border-rose-600/60 flex items-center justify-center text-rose-500 mb-3 transition-colors">
+                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                        <span class="text-xs font-mono uppercase tracking-wider text-zinc-400">System Slot #0${index + 1} Preview</span>
+                        <span class="text-[11px] text-zinc-500 mt-1">Awaiting Project Deployment</span>
+                      </div>`
+                }
+
+                <!-- Category Tag Pill -->
+                <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full text-xs font-medium bg-zinc-900/90 text-zinc-200 border border-zinc-700/80 backdrop-blur-md">
+                  ${project.category}
+                </span>
+
+                <!-- Slide Count Badge -->
+                <span class="absolute bottom-3 right-3 px-2.5 py-1 rounded-md text-[11px] font-mono bg-zinc-900/90 text-zinc-300 border border-zinc-700/80">
+                  ${project.isPlaceholder ? "BLUEPRINT" : `${project.gallery.length} SCREENSHOTS`}
+                </span>
+              </div>
+
+              <!-- Project Details -->
+              <div class="p-6">
+                <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-rose-400 transition-colors">
+                  ${project.title}
+                </h3>
+                <p class="mt-2.5 text-sm text-zinc-300 leading-relaxed">
+                  ${project.description}
+                </p>
+
+                <!-- Compact Pill Tags -->
+                <div class="mt-4 flex flex-wrap gap-1.5">
+                  ${project.tags
+                    .map(
+                      (tag) => `
+                      <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-zinc-900/75 text-zinc-400 border border-zinc-700/60">
+                        ${tag}
+                      </span>
+                    `
+                    )
+                    .join("")}
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Footer with Crimson "Open Gallery Slider →" Link -->
+            <div class="px-6 py-4 bg-zinc-900/45 border-t border-zinc-800/80 flex items-center justify-between">
+              <span class="text-[11px] font-mono text-zinc-500">BUILD // 0${index + 1}</span>
+              <button
+                type="button"
+                onclick="event.stopPropagation(); openProjectModal(${index});"
+                class="text-sm font-semibold text-rose-500 hover:text-rose-400 inline-flex items-center gap-1.5 group/btn focus:outline-none transition-colors"
+              >
+                <span>Open Gallery Slider</span>
+                <span class="transform group-hover/btn:translate-x-1 transition-transform">→</span>
+              </button>
+            </div>
+          </article>
+        `
+        )
+        .join("");
+    }
+
+    /**
+     * 3D CENTER-FOCUS DEPTH CAROUSEL CONTROLLER
+     * Keeps the currently viewed card scaled closer in the center while animating neighboring cards to the back.
+     */
+    const carouselControllers = {};
+
+    function handleCardClick(type, index, event) {
+      const ctrl = carouselControllers[type];
+      if (!ctrl) return;
+      if (ctrl.activeIndex !== index) {
+        event.preventDefault();
+        ctrl.scrollToIndex(index);
+      } else {
+        if (type === "cert") {
+          openCertificateModal(index);
+        } else {
+          openProjectModal(index);
+        }
+      }
+    }
+
+    function setupDepthCarousel({
+      type,
+      trackId,
+      dotsId,
+      counterId,
+      prevBtnId,
+      nextBtnId,
+      totalItems
+    }) {
+      const track = document.getElementById(trackId);
+      const dotsContainer = document.getElementById(dotsId);
+      const counterEl = document.getElementById(counterId);
+      const prevBtn = document.getElementById(prevBtnId);
+      const nextBtn = document.getElementById(nextBtnId);
+      const cards = Array.from(track.querySelectorAll(".depth-carousel-item"));
+
+      let activeIndex = 0;
+
+      // Render pagination dots
+      dotsContainer.innerHTML = cards
+        .map(
+          (_, idx) => `
+          <button
+            type="button"
+            aria-label="Go to slide ${idx + 1}"
+            onclick="carouselControllers['${type}'].scrollToIndex(${idx})"
+            class="h-1.5 rounded-full transition-all duration-300 ${
+              idx === 0 ? "w-6 bg-rose-600" : "w-2 bg-zinc-700 hover:bg-zinc-500"
+            }"
+          ></button>
+        `
+        )
+        .join("");
+
+      const dotButtons = Array.from(dotsContainer.querySelectorAll("button"));
+
+      function applyDepthClasses(centerIdx) {
+        activeIndex = centerIdx;
+        cards.forEach((card, idx) => {
+          const distance = Math.abs(idx - centerIdx);
+          card.classList.remove("is-active-card", "is-back-card", "is-far-card");
+          if (distance === 0) {
+            card.classList.add("is-active-card");
+          } else if (distance === 1) {
+            card.classList.add("is-back-card");
+          } else {
+            card.classList.add("is-far-card");
+          }
+        });
+
+        dotButtons.forEach((dot, idx) => {
+          dot.className = `h-1.5 rounded-full transition-all duration-300 ${
+            idx === centerIdx ? "w-6 bg-rose-600" : "w-2 bg-zinc-700 hover:bg-zinc-500"
+          }`;
+        });
+
+        if (counterEl) {
+          counterEl.textContent = `${String(centerIdx + 1).padStart(2, "0")} / ${String(totalItems).padStart(2, "0")}`;
+        }
+      }
+
+      function detectCenteredCard() {
+        const trackRect = track.getBoundingClientRect();
+        const trackCenter = trackRect.left + trackRect.width / 2;
+        let closestIdx = 0;
+        let minDistance = Infinity;
+
+        cards.forEach((card, idx) => {
+          const rect = card.getBoundingClientRect();
+          const cardCenter = rect.left + rect.width / 2;
+          const dist = Math.abs(cardCenter - trackCenter);
+          if (dist < minDistance) {
+            minDistance = dist;
+            closestIdx = idx;
+          }
+        });
+
+        if (closestIdx !== activeIndex) {
+          applyDepthClasses(closestIdx);
+        }
+      }
+
+      function scrollToIndex(targetIndex) {
+        const clamped = (targetIndex + cards.length) % cards.length;
+        const targetCard = cards[clamped];
+        if (!targetCard) return;
+        const scrollLeft =
+          targetCard.offsetLeft - (track.clientWidth - targetCard.offsetWidth) / 2;
+        track.scrollTo({ left: scrollLeft, behavior: "smooth" });
+        applyDepthClasses(clamped);
+      }
+
+      let ticking = false;
+      track.addEventListener(
+        "scroll",
+        () => {
+          if (!ticking) {
+            window.requestAnimationFrame(() => {
+              detectCenteredCard();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        },
+        { passive: true }
+      );
+
+      prevBtn.addEventListener("click", () => {
+        scrollToIndex(activeIndex - 1);
+      });
+
+      nextBtn.addEventListener("click", () => {
+        scrollToIndex(activeIndex + 1);
+      });
+
+      carouselControllers[type] = {
+        get activeIndex() {
+          return activeIndex;
+        },
+        scrollToIndex
+      };
+
+      // Initialize first card as centered foreground card
+      applyDepthClasses(0);
+    }
+
+    /**
+     * Render Contact & Footer Links
+     */
+    function renderFooter() {
+      const { personalInfo } = portfolioData;
+
+      const emailEl = document.getElementById("footerEmail");
+      const emailText = document.getElementById("footerEmailText");
+      emailEl.href = `mailto:${personalInfo.email}`;
+      emailText.textContent = personalInfo.email;
+
+      const phoneEl = document.getElementById("footerPhone");
+      const phoneText = document.getElementById("footerPhoneText");
+      phoneEl.href = `tel:${personalInfo.phone}`;
+      phoneText.textContent = personalInfo.phone;
+
+      const socials = [
+        {
+          name: "GitHub",
+          url: personalInfo.github,
+          icon: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>`
+        },
+        {
+          name: "Facebook",
+          url: personalInfo.facebook,
+          icon: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>`
+        },
+        {
+          name: "Messenger",
+          url: personalInfo.messenger,
+          icon: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.36 2 2 6.13 2 11.7c0 2.91 1.19 5.44 3.14 7.17.16.13.26.35.27.57l.05 1.78c.04.57.61.94 1.13.71l1.98-.87c.17-.08.36-.1.55-.06.91.25 1.87.38 2.88.38 5.64 0 10-4.13 10-9.7C22 6.13 17.64 2 12 2zm5.89 7.58l-2.9 4.61c-.46.73-1.45.92-2.13.4l-2.3-1.73a.6.6 0 00-.72 0l-3.1 2.35c-.41.31-.95-.18-.68-.62l2.9-4.61c.46-.73 1.45-.92 2.13-.4l2.3 1.73a.6.6 0 00.72 0l3.1-2.35c.41-.31.95.18.68.62z"/></svg>`
+        },
+        {
+          name: "Instagram",
+          url: personalInfo.instagram,
+          icon: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"/></svg>`
+        }
+      ];
+
+      const socialContainer = document.getElementById("footerSocials");
+      socialContainer.innerHTML = socials
+        .map(
+          (s) => `
+          <a
+            href="${s.url}"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="${s.name}"
+            title="${s.name}"
+            class="w-11 h-11 rounded-xl bg-zinc-800/80 border border-zinc-700/80 flex items-center justify-center text-zinc-400 hover:text-rose-500 hover:border-rose-600/80 hover:bg-zinc-800 hover:shadow-[0_0_18px_-4px_rgba(225,29,72,0.4)] transition-all"
+          >
+            ${s.icon}
+          </a>
+        `
+        )
+        .join("");
+    }
+
+    /**
+     * GALLERY SLIDER MODAL LOGIC
+     */
+    let activeGallery = {
+      title: "",
+      category: "",
+      slides: [],
+      currentIndex: 0
+    };
+
+    const modalEl = document.getElementById("galleryModal");
+    const modalTitleEl = document.getElementById("modalTitle");
+    const modalCategoryEl = document.getElementById("modalCategory");
+    const modalCounterEl = document.getElementById("modalCounter");
+    const modalImageEl = document.getElementById("modalSlideImage");
+    const modalPlaceholderEl = document.getElementById("modalPlaceholderGraphic");
+    const modalCaptionEl = document.getElementById("modalCaption");
+    const modalThumbsEl = document.getElementById("modalThumbnails");
+
+    function openProjectModal(projectIndex) {
+      const project = portfolioData.projects[projectIndex];
+      if (!project) return;
+
+      activeGallery = {
+        title: project.title,
+        category: project.category,
+        slides: project.gallery || [],
+        currentIndex: 0
+      };
+      showModal();
+    }
+
+    function openCertificateModal(certIndex) {
+      activeGallery = {
+        title: "Certifications & Eligibility",
+        category: "Verified Credentials Gallery",
+        slides: portfolioData.certifications.map((c) => ({
+          src: c.image,
+          caption: `${c.title} — ${c.issuer} (${c.date})`
+        })),
+        currentIndex: certIndex
+      };
+      showModal();
+    }
+
+    function showModal() {
+      modalEl.classList.remove("hidden");
+      modalEl.classList.add("flex");
+      document.body.style.overflow = "hidden";
+      updateModalSlide();
+    }
+
+    function closeModal() {
+      modalEl.classList.add("hidden");
+      modalEl.classList.remove("flex");
+      document.body.style.overflow = "";
+    }
+
+    function updateModalSlide() {
+      const { title, category, slides, currentIndex } = activeGallery;
+      const currentSlide = slides[currentIndex] || { src: "", caption: "" };
+
+      modalTitleEl.textContent = title;
+      modalCategoryEl.textContent = category;
+      modalCounterEl.textContent = `${String(currentIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+      modalCaptionEl.textContent = currentSlide.caption;
+
+      if (currentSlide.src) {
+        modalImageEl.src = currentSlide.src;
+        modalImageEl.alt = currentSlide.caption;
+        modalImageEl.classList.remove("hidden");
+        modalPlaceholderEl.classList.add("hidden");
+        modalPlaceholderEl.classList.remove("flex");
+      } else {
+        modalImageEl.classList.add("hidden");
+        modalPlaceholderEl.classList.remove("hidden");
+        modalPlaceholderEl.classList.add("flex");
+      }
+
+      // Render thumbnail strip
+      modalThumbsEl.innerHTML = slides
+        .map(
+          (slide, idx) => `
+          <button
+            type="button"
+            onclick="goToSlide(${idx})"
+            class="relative flex-shrink-0 w-16 h-11 rounded-lg overflow-hidden border transition-all ${
+              idx === currentIndex
+                ? "border-rose-500 ring-2 ring-rose-600/40 opacity-100"
+                : "border-zinc-700 opacity-50 hover:opacity-85"
+            }"
+          >
+            ${
+              slide.src
+                ? `<img src="${slide.src}" alt="Slide ${idx + 1}" class="w-full h-full object-cover" />`
+                : `<div class="w-full h-full bg-zinc-800 flex items-center justify-center text-[10px] font-mono text-zinc-400">#0${idx + 1}</div>`
+            }
+          </button>
+        `
+        )
+        .join("");
+    }
+
+    function goToSlide(index) {
+      const total = activeGallery.slides.length;
+      if (total === 0) return;
+      activeGallery.currentIndex = (index + total) % total;
+      updateModalSlide();
+    }
+
+    document.getElementById("prevSlideBtn").addEventListener("click", () => {
+      goToSlide(activeGallery.currentIndex - 1);
+    });
+
+    document.getElementById("nextSlideBtn").addEventListener("click", () => {
+      goToSlide(activeGallery.currentIndex + 1);
+    });
+
+    document.getElementById("closeModalBtn").addEventListener("click", closeModal);
+
+    modalEl.addEventListener("click", (e) => {
+      if (e.target === modalEl) closeModal();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (modalEl.classList.contains("hidden")) return;
+      if (e.key === "Escape") closeModal();
+      if (e.key === "ArrowLeft") goToSlide(activeGallery.currentIndex - 1);
+      if (e.key === "ArrowRight") goToSlide(activeGallery.currentIndex + 1);
+    });
+
+    /**
+     * MOBILE MENU TOGGLE
+     */
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    const hamburgerIcon = document.getElementById("hamburgerIcon");
+    const closeMenuIcon = document.getElementById("closeMenuIcon");
+
+    mobileMenuBtn.addEventListener("click", () => {
+      const isHidden = mobileMenu.classList.toggle("hidden");
+      hamburgerIcon.classList.toggle("hidden", !isHidden);
+      closeMenuIcon.classList.toggle("hidden", isHidden);
+      mobileMenuBtn.setAttribute("aria-expanded", String(!isHidden));
+    });
+
+    document.querySelectorAll(".mobile-nav-link").forEach((link) => {
+      link.addEventListener("click", () => {
+        mobileMenu.classList.add("hidden");
+        hamburgerIcon.classList.remove("hidden");
+        closeMenuIcon.classList.add("hidden");
+        mobileMenuBtn.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    /**
+     * INITIALIZE APPLICATION
+     */
+    document.addEventListener("DOMContentLoaded", () => {
+      renderProfileAndEducation();
+      renderTechStack();
+      renderCertifications();
+      renderProjects();
+      renderFooter();
+
+      setupDepthCarousel({
+        type: "cert",
+        trackId: "certificationsGrid",
+        dotsId: "certCarouselDots",
+        counterId: "certCarouselCounter",
+        prevBtnId: "certPrevBtn",
+        nextBtnId: "certNextBtn",
+        totalItems: portfolioData.certifications.length
+      });
+
+      setupDepthCarousel({
+        type: "proj",
+        trackId: "projectsGrid",
+        dotsId: "projCarouselDots",
+        counterId: "projCarouselCounter",
+        prevBtnId: "projPrevBtn",
+        nextBtnId: "projNextBtn",
+        totalItems: portfolioData.projects.length
+      });
+    });
+  </script>
+</body>
+</html>
