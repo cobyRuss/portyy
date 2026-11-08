@@ -811,16 +811,16 @@
       },
 
       technicalStack: [
-        { name: "Laravel", category: "Backend Framework", code: "FW-01" },
-        { name: "PHP", category: "Server Scripting", code: "LG-02" },
-        { name: "HTML5", category: "Semantic Markup", code: "UI-03" },
-        { name: "CSS3", category: "Styling & Layout", code: "UI-04" },
-        { name: "JavaScript", category: "Client Logic", code: "LG-05" },
-        { name: "MySQL", category: "Relational DB", code: "DB-06" },
-        { name: "SQLite", category: "Embedded DB", code: "DB-07" },
-        { name: "Git & GitHub", category: "Version Control", code: "VC-08" },
-        { name: "VS Code", category: "Development IDE", code: "TL-09" },
-        { name: "XAMPP", category: "Local Server Stack", code: "SV-10" }
+        { name: "Laravel", category: "Backend Framework" },
+        { name: "PHP", category: "Server Scripting" },
+        { name: "HTML5", category: "Semantic Markup" },
+        { name: "CSS3", category: "Styling & Layout" },
+        { name: "JavaScript", category: "Client Logic" },
+        { name: "MySQL", category: "Relational DB" },
+        { name: "SQLite", category: "Embedded DB" },
+        { name: "Git & GitHub", category: "Version Control" },
+        { name: "VS Code", category: "Development IDE" },
+        { name: "XAMPP", category: "Local Server Stack" }
       ],
 
       projects: [
@@ -1006,7 +1006,7 @@
 
     /**
      * Render 10 Tech Stack Cards with Subtle Red Edge Illumination on Hover
-     * Compact on mobile (< 640px) so all 10 modules fit cleanly on one phone screen.
+     * Tech name sits directly beside the logo on both phone and PC so all 10 cards fit cleanly.
      */
     function renderTechStack() {
       const grid = document.getElementById("techStackGrid");
@@ -1014,15 +1014,14 @@
         .map(
           (tech) => `
           <div class="hardware-card hardware-card-interactive rounded-xl p-2.5 sm:p-4 flex flex-col justify-between group cursor-default">
-            <div class="flex items-center justify-between mb-1 sm:mb-3">
-              <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-zinc-900/90 border border-zinc-700/70 group-hover:border-rose-600/60 flex items-center justify-center text-zinc-300 group-hover:text-rose-500 transition-colors [&>svg]:w-4 [&>svg]:h-4 sm:[&>svg]:w-5 sm:[&>svg]:h-5">
+            <div class="flex items-center gap-2.5 sm:gap-3">
+              <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-zinc-900/90 border border-zinc-700/70 group-hover:border-rose-600/60 flex items-center justify-center flex-shrink-0 text-zinc-300 group-hover:text-rose-500 transition-colors [&>svg]:w-4 [&>svg]:h-4 sm:[&>svg]:w-5 sm:[&>svg]:h-5">
                 ${getTechIcon(tech.name)}
               </div>
-              <span class="text-[9px] sm:text-[10px] font-mono text-zinc-500 group-hover:text-rose-400 transition-colors">${tech.code}</span>
+              <h3 class="text-xs sm:text-sm font-semibold text-zinc-100 group-hover:text-white transition-colors leading-tight truncate">${tech.name}</h3>
             </div>
-            <div>
-              <h3 class="text-xs sm:text-sm font-semibold text-zinc-100 group-hover:text-white transition-colors leading-tight">${tech.name}</h3>
-              <span class="inline-block mt-1 sm:mt-1.5 px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-medium bg-zinc-900/80 text-zinc-400 border border-zinc-700/60 group-hover:border-rose-600/40 group-hover:text-zinc-300 transition-colors truncate max-w-full">
+            <div class="mt-2 sm:mt-3">
+              <span class="inline-block px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-medium bg-zinc-900/80 text-zinc-400 border border-zinc-700/60 group-hover:border-rose-600/40 group-hover:text-zinc-300 transition-colors truncate max-w-full">
                 ${tech.category}
               </span>
             </div>

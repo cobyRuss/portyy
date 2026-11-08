@@ -155,6 +155,18 @@
 - Optimized mobile (`< 640px`) sizing and spacing across all 6 screens so every card, pill, badge, all **10 Technical Stack modules** (`grid-cols-2 gap-2`), Certificate carousel cards, Project carousel cards (including tags and `"Open Gallery Slider →"`), and Contact/Footer elements fit 100% inside a single phone viewport (`calc(100dvh - 3.5rem)`) with zero clipping.
 - Implemented `setupMobileVerticalDeck()` in [`index.html`](index.html) so on phone devices (`< 640px`), vertical swipes smoothly transition one full-screen section at a time (`01 About -> 02 Education -> 03 Tech Stack -> 04 Certifications -> 05 Projects -> 06 Contact`, wrapping back to `01 About` after the last section) with right-edge LED progress dots.
 
+---
+
+## Prompt 13 — Tech Stack Card Layout Refinement (Name Beside Logo)
+
+### User Prompt
+> everything was good execept the tech stack didnt actually fit. on both phone and pc on tech stack, remove the FW-01,LG-02,UI-03 etc and put the names (Laravel,PHP,HTML5etc) beside the logos, so it fits in the phone
+
+### Implementation Summary
+- Removed the module codes (`FW-01`, `LG-02`, `UI-03`, etc.) from `portfolioData.technicalStack` and [`renderTechStack()`](index.html).
+- Placed each technology name (`Laravel`, `PHP`, `HTML5`, etc.) directly beside its logo icon on the top row (`flex items-center gap-2.5 sm:gap-3`) with the category badge underneath on both phone and PC, reducing the vertical height of all 5 mobile rows so all 10 Tech Stack cards fit comfortably on phone screens.
+
+
 
 
 
