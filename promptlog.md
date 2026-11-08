@@ -204,4 +204,15 @@
 ### Implementation Summary
 - Created [`README.md`](README.md) documenting the live deployment URL (`https://russeltlm.vercel.app`), Matte PC Hardware UI design tokens, interactive features (3D center-locked carousels, mobile full-screen vertical swipe deck, lightbox gallery slider), complete tables for all 4 featured projects and 5 certifications, directory structure, and local/Vercel deployment instructions.
 
+---
+
+## Prompt 17 — Red Capital "C" Tab Favicon & Larger Mobile Profile Image
+
+### User Prompt
+> add a red capital letter C icon instead of earth/web on the tab name (PC) and on Phone make my image larger (theres still space above my image)
+
+### Implementation Summary
+- Created [`assets/favicon.svg`](assets/favicon.svg) and embedded an inline SVG favicon (`<link rel="icon" type="image/svg+xml">`) in [`index.html`](index.html) featuring a bold crimson red (`#e11d48`) capital **`C`** on a matte dark charcoal (`#18181b`) hardware badge so browser tabs display the custom `C` icon instead of the default globe.
+- Increased the mobile Hero avatar size in [`#about`](index.html) from `w-24 h-24` (`96px`) to `w-36 h-36` (`144px`, keeping `sm:w-48 sm:h-48` on tablet/PC) to fill the vertical space above the profile photo on phone screens.
+
 

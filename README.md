@@ -85,6 +85,7 @@ CobyPortfolio/
 ├── README.md                                       # Project documentation
 ├── promptlog.md                                    # Chronological log of all prompts & architectural updates
 └── assets/
+    ├── favicon.svg                                 # Red capital "C" browser tab favicon
     ├── profile/
     │   └── profile.jpg                             # Hero avatar photo
     ├── resume/
