@@ -166,7 +166,16 @@
 - Removed the module codes (`FW-01`, `LG-02`, `UI-03`, etc.) from `portfolioData.technicalStack` and [`renderTechStack()`](index.html).
 - Placed each technology name (`Laravel`, `PHP`, `HTML5`, etc.) directly beside its logo icon on the top row (`flex items-center gap-2.5 sm:gap-3`) with the category badge underneath on both phone and PC, reducing the vertical height of all 5 mobile rows so all 10 Tech Stack cards fit comfortably on phone screens.
 
+---
 
+## Prompt 14 — Mobile Pill & Badge Alignment Fix
 
+### User Prompt
+> align pills/badges on phone, its crooked asf
+
+### Implementation Summary
+- **Hero Tech Stack Pills (`#heroStackPills`) & CTA Buttons:** Converted `#heroStackPills` on phone (`< 640px`) from a jagged `flex-wrap` row to a symmetric 2-column grid (`grid grid-cols-2 sm:flex sm:flex-wrap gap-1.5`) where every pill shares an exact `h-7 w-full` footprint, centered text, and `leading-none whitespace-nowrap`. Aligned the two CTA buttons (`My Resume PDF` and `github.com/cobyRuss`) in a matching 2-column grid below.
+- **Tech Stack Category Badges (`renderTechStack`):** Converted each card's category badge (`Backend Framework`, `Client Logic`, etc.) from a variable-width `inline-block` span into a full-width centered pill (`flex items-center justify-center w-full h-6 px-2.5 rounded-full leading-none whitespace-nowrap truncate`) so all 10 category pills align edge-to-edge across the 2-column grid.
+- **Education, Certifications, Projects & Contact Badges:** Standardized heights (`h-6` / `h-8`), vertical centering (`inline-flex items-center justify-center leading-none whitespace-nowrap`), and 2-column symmetric tag grids (`grid grid-cols-2 sm:flex`) across `#education`, `#certifications`, `#projects`, and `#contact`.
 
 
