@@ -194,3 +194,14 @@
   - Locked `html, body` on `< 640px` with `position: fixed !important; inset: 0 !important;` and dynamically synced `--app-h` (`visualViewport.height`) and `--slide-h` (`appH - headerH - 2`) with `!important` on both `#mobileViewport` and `.mobile-slide`, keeping `<header>` permanently visible at the top of the screen.
   - Updated [`setupMobileVerticalDeck()`](index.html) to translate `#mobileDeck` to `-slides[wrapped].offsetTop` instead of `wrapped * viewport.clientHeight`, guaranteeing zero cumulative vertical drift across all 6 slides.
 
+---
+
+## Prompt 16 — Project README Documentation
+
+### User Prompt
+> update readme
+
+### Implementation Summary
+- Created [`README.md`](README.md) documenting the live deployment URL (`https://russeltlm.vercel.app`), Matte PC Hardware UI design tokens, interactive features (3D center-locked carousels, mobile full-screen vertical swipe deck, lightbox gallery slider), complete tables for all 4 featured projects and 5 certifications, directory structure, and local/Vercel deployment instructions.
+
+
