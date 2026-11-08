@@ -142,5 +142,19 @@
 - Mathematically locks every chosen card (`01` through `05` / `04`) to the exact pixel center of `.depth-carousel-viewport` (`viewport.clientWidth / 2 - (slot.offsetLeft + slot.offsetWidth / 2)`), eliminating iOS Safari scroll-snap and rubber-band edge bugs.
 - When reaching the last certificate (`05 / 05`) or last project (`04 / 04`), swiping left (or dragging/scrolling forward) wraps smoothly back to `01` (`01 / 05` and `01 / 04`), and swiping right on `01` wraps to the last item.
 
+---
+
+## Prompt 12 — Mobile Full-Screen Section Fitting & Vertical Swipe Deck
+
+### User Prompt
+> on phone devices, every pill/badges should fit the screen and instead of scrolling down; itll be a swipe down to next pill/badge. here is how it looks on my phone; most dont fit especially the tech stack (named images)  
+> *(Attached: `a.zip` containing `about.jpg`, `education.jpg`, `tech stack.jpg`, `certificates.jpg`, `projects.jpg`, `contact.jpg`)*
+
+### Implementation Summary
+- Structured the 6 portfolio views (`#about`, `#education`, `#skills`, `#certifications`, `#projects`, `#contact`) as `.mobile-slide` screens inside `#mobileViewport` and `#mobileDeck`.
+- Optimized mobile (`< 640px`) sizing and spacing across all 6 screens so every card, pill, badge, all **10 Technical Stack modules** (`grid-cols-2 gap-2`), Certificate carousel cards, Project carousel cards (including tags and `"Open Gallery Slider →"`), and Contact/Footer elements fit 100% inside a single phone viewport (`calc(100dvh - 3.5rem)`) with zero clipping.
+- Implemented `setupMobileVerticalDeck()` in [`index.html`](index.html) so on phone devices (`< 640px`), vertical swipes smoothly transition one full-screen section at a time (`01 About -> 02 Education -> 03 Tech Stack -> 04 Certifications -> 05 Projects -> 06 Contact`, wrapping back to `01 About` after the last section) with right-edge LED progress dots.
+
+
 
 
