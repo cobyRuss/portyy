@@ -107,3 +107,27 @@
 ### Implementation Summary
 - Standardized both `#heroResumeBtn` (`My Resume PDF`) and `#heroGithubBtn` (`github.com/cobyRuss`) in [`index.html`](index.html) to identical dimensions (`h-11 w-52 px-5 rounded-lg text-sm font-medium inline-flex items-center justify-center gap-2`).
 
+---
+
+## Prompt 9 — Automatic Git Push Configuration
+
+### User Prompt
+> auto push changes
+
+### Implementation Summary
+- Configured Git credential binding for `cobyRuss`, linked both remote push URLs (`portyy.git` and `eportfolio.git`), and installed a `.git/hooks/post-commit` hook so every commit automatically pushes to `origin/main`.
+
+---
+
+## Prompt 10 — Center-Lock Carousel Fix for Projects & Certificates
+
+### User Prompt
+> projects and certificates dont get centered when choosen,, lock center when choosen  
+> *(Attached: 4 mobile iOS screenshots showing selected carousel cards shifted slightly right of center)*
+
+### Implementation Summary
+- Wrapped each `.depth-carousel-item` inside an untransformed `.carousel-snap-slot` container (`scroll-snap-align: center; scroll-snap-stop: always; flex: 0 0 var(--slot-w)`) so CSS 3D depth transforms (`scale` / `translate3d`) never distort scroll-snap bounding boxes on iOS Safari or desktop browsers.
+- Replaced fragile scroll padding with `::before` and `::after` flex spacer pseudo-elements (`flex: 0 0 calc((100% - var(--slot-w)) / 2)`) on `.depth-carousel-track`, guaranteeing the first (`01`) and last (`05` / `04`) cards can lock dead-center in the viewport.
+- Updated `setupDepthCarousel()` in [`index.html`](index.html) to compute exact center coordinates from the untransformed `.carousel-snap-slot` elements, added an `isProgrammaticScroll` lock during smooth scrolling so intermediate scroll frames cannot hijack the active selection, and locked the final `scrollLeft` position once the transition completes.
+
+

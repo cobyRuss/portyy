@@ -133,39 +133,83 @@
       scrollbar-width: none;
     }
 
-    /* 3D Center-Focus Depth Carousel (Active card closer, others animated to the back) */
+    /* 3D Center-Focus Depth Carousel (Active card locked dead-center, others animated to the back) */
     .depth-carousel-track {
-      perspective: 1200px;
+      --slot-w: 84%;
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+      .depth-carousel-track.cert-track {
+        --slot-w: 410px;
+      }
+      .depth-carousel-track.proj-track {
+        --slot-w: 460px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .depth-carousel-track.cert-track {
+        --slot-w: 450px;
+      }
+      .depth-carousel-track.proj-track {
+        --slot-w: 510px;
+      }
+    }
+
+    /* Real flex spacers on both ends so first & last items lock dead-center in all browsers (including iOS Safari) */
+    .depth-carousel-track::before,
+    .depth-carousel-track::after {
+      content: "";
+      flex: 0 0 calc((100% - var(--slot-w)) / 2);
+      min-width: calc((100% - var(--slot-w)) / 2);
+    }
+
+    /* Untransformed snap slot: guarantees 100% accurate center scroll-snapping without scale/3D offset bugs */
+    .carousel-snap-slot {
+      flex: 0 0 var(--slot-w);
+      width: var(--slot-w);
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+      padding-inline: 0.375rem;
+      display: flex;
     }
 
     .depth-carousel-item {
-      scroll-snap-align: center;
+      width: 100%;
+      transform-origin: center center;
       transition:
-        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-        opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-        filter 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.45s cubic-bezier(0.22, 1, 0.36, 1),
         border-color 0.35s ease,
         box-shadow 0.45s ease;
       will-change: transform, opacity, filter;
     }
 
     .depth-carousel-item.is-active-card {
-      transform: translate3d(0, 0, 0) scale(1);
+      transform: scale(1);
       opacity: 1;
       filter: brightness(1);
       z-index: 20;
-      border-color: rgba(225, 29, 72, 0.78);
+      border-color: rgba(225, 29, 72, 0.82);
       box-shadow:
         0 24px 48px -12px rgba(0, 0, 0, 0.75),
-        0 0 28px -6px rgba(225, 29, 72, 0.28),
+        0 0 28px -6px rgba(225, 29, 72, 0.3),
         inset 0 1px 0 0 rgba(225, 29, 72, 0.2);
     }
 
     .depth-carousel-item.is-back-card {
-      transform: translate3d(0, 10px, -90px) scale(0.82);
+      transform: scale(0.84);
       opacity: 0.42;
-      filter: brightness(0.7);
+      filter: brightness(0.68);
       z-index: 10;
     }
 
@@ -176,7 +220,7 @@
     }
 
     .depth-carousel-item.is-far-card {
-      transform: translate3d(0, 16px, -150px) scale(0.74);
+      transform: scale(0.76);
       opacity: 0.22;
       filter: brightness(0.55);
       z-index: 5;
@@ -439,10 +483,10 @@
           </div>
 
           <!-- Horizontally Scrollable 3D Depth Track for the 5 Certificate Items -->
-          <div class="relative">
+          <div class="relative -mx-4 sm:mx-0">
             <div
               id="certificationsGrid"
-              class="depth-carousel-track flex items-center overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar py-6 px-[7vw] sm:px-[calc(50%-210px)] md:px-[calc(50%-230px)] gap-2 sm:gap-4"
+              class="depth-carousel-track cert-track no-scrollbar"
             ></div>
             <div id="certCarouselDots" class="mt-2 flex items-center justify-center gap-2"></div>
           </div>
@@ -493,10 +537,10 @@
         </div>
 
         <!-- Horizontally Scrollable 3D Depth Track of 4 Project Cards -->
-        <div class="relative">
+        <div class="relative -mx-4 sm:mx-0">
           <div
             id="projectsGrid"
-            class="depth-carousel-track flex items-stretch overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar py-6 px-[6vw] sm:px-[calc(50%-230px)] md:px-[calc(50%-260px)] gap-2 sm:gap-4"
+            class="depth-carousel-track proj-track no-scrollbar"
           ></div>
           <div id="projCarouselDots" class="mt-2 flex items-center justify-center gap-2"></div>
         </div>
@@ -923,53 +967,55 @@
       grid.innerHTML = portfolioData.certifications
         .map(
           (cert, idx) => `
-          <article
-            data-carousel-index="${idx}"
-            onclick="handleCardClick('cert', ${idx}, event)"
-            class="depth-carousel-item hardware-card flex-shrink-0 w-[82vw] sm:w-[400px] md:w-[440px] rounded-2xl overflow-hidden flex flex-col justify-between cursor-pointer group select-none"
-          >
-            <div>
-              <!-- Certificate Image Preview -->
-              <div class="relative h-52 sm:h-56 bg-zinc-900/90 border-b border-zinc-800 overflow-hidden flex items-center justify-center p-3">
-                <img
-                  src="${cert.image}"
-                  alt="${cert.title}"
-                  loading="lazy"
-                  class="w-full h-full object-contain rounded group-hover:scale-[1.03] transition-transform duration-300"
-                />
-                <!-- Small Green "Earned" Badge -->
-                <span class="absolute top-3 right-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-zinc-900/90 text-emerald-400 border border-emerald-500/40 shadow-md">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                  ${cert.status}
-                </span>
-                <span class="absolute bottom-2.5 left-3 px-2 py-0.5 rounded bg-zinc-900/85 border border-zinc-700/70 text-[10px] font-mono text-zinc-400">
-                  CERT-0${idx + 1}
-                </span>
-              </div>
-
-              <!-- Certificate Info -->
-              <div class="p-5 sm:p-6">
-                <div class="flex items-center justify-between gap-2 text-xs font-mono text-zinc-400 mb-1.5">
-                  <span>${cert.date}</span>
+          <div class="carousel-snap-slot">
+            <article
+              data-carousel-index="${idx}"
+              onclick="handleCardClick('cert', ${idx}, event)"
+              class="depth-carousel-item hardware-card rounded-2xl overflow-hidden flex flex-col justify-between cursor-pointer group select-none"
+            >
+              <div>
+                <!-- Certificate Image Preview -->
+                <div class="relative h-52 sm:h-56 bg-zinc-900/90 border-b border-zinc-800 overflow-hidden flex items-center justify-center p-3">
+                  <img
+                    src="${cert.image}"
+                    alt="${cert.title}"
+                    loading="lazy"
+                    class="w-full h-full object-contain rounded group-hover:scale-[1.03] transition-transform duration-300"
+                  />
+                  <!-- Small Green "Earned" Badge -->
+                  <span class="absolute top-3 right-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-zinc-900/90 text-emerald-400 border border-emerald-500/40 shadow-md">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    ${cert.status}
+                  </span>
+                  <span class="absolute bottom-2.5 left-3 px-2 py-0.5 rounded bg-zinc-900/85 border border-zinc-700/70 text-[10px] font-mono text-zinc-400">
+                    CERT-0${idx + 1}
+                  </span>
                 </div>
-                <h3 class="text-base sm:text-lg font-bold text-zinc-100 group-hover:text-white transition-colors leading-snug">
-                  ${cert.title}
-                </h3>
-                <p class="text-xs sm:text-sm text-zinc-400 mt-1.5">${cert.issuer}</p>
-              </div>
-            </div>
 
-            <div class="px-5 sm:px-6 pb-4 pt-3 border-t border-zinc-800/70 flex items-center justify-between text-xs">
-              <span class="font-mono text-zinc-500">VERIFIED CREDENTIAL</span>
-              <button
-                type="button"
-                onclick="event.stopPropagation(); openCertificateModal(${idx});"
-                class="font-semibold text-rose-500 hover:text-rose-400 flex items-center gap-1 transition-colors focus:outline-none"
-              >
-                Inspect Certificate →
-              </button>
-            </div>
-          </article>
+                <!-- Certificate Info -->
+                <div class="p-5 sm:p-6">
+                  <div class="flex items-center justify-between gap-2 text-xs font-mono text-zinc-400 mb-1.5">
+                    <span>${cert.date}</span>
+                  </div>
+                  <h3 class="text-base sm:text-lg font-bold text-zinc-100 group-hover:text-white transition-colors leading-snug">
+                    ${cert.title}
+                  </h3>
+                  <p class="text-xs sm:text-sm text-zinc-400 mt-1.5">${cert.issuer}</p>
+                </div>
+              </div>
+
+              <div class="px-5 sm:px-6 pb-4 pt-3 border-t border-zinc-800/70 flex items-center justify-between text-xs">
+                <span class="font-mono text-zinc-500">VERIFIED CREDENTIAL</span>
+                <button
+                  type="button"
+                  onclick="event.stopPropagation(); openCertificateModal(${idx});"
+                  class="font-semibold text-rose-500 hover:text-rose-400 flex items-center gap-1 transition-colors focus:outline-none"
+                >
+                  Inspect Certificate →
+                </button>
+              </div>
+            </article>
+          </div>
         `
         )
         .join("");
@@ -983,99 +1029,101 @@
       grid.innerHTML = portfolioData.projects
         .map(
           (project, index) => `
-          <article
-            data-carousel-index="${index}"
-            onclick="handleCardClick('proj', ${index}, event)"
-            class="depth-carousel-item hardware-card flex-shrink-0 w-[85vw] sm:w-[440px] md:w-[500px] rounded-2xl overflow-hidden flex flex-col justify-between cursor-pointer group select-none"
-          >
-            <div>
-              <!-- Project Image Preview / Placeholder -->
-              <div
-                class="relative h-56 sm:h-64 bg-zinc-900 border-b border-zinc-800 overflow-hidden flex items-center justify-center"
-              >
-                ${
-                  project.mobileShowcase && project.mobileShowcase.length
-                    ? `<div class="w-full h-full bg-zinc-900/95 flex items-center justify-center gap-3 px-6 pt-6 pb-2 group-hover:scale-[1.02] transition-transform duration-500">
-                        ${project.mobileShowcase
-                          .map(
-                            (imgSrc, mIdx) => `
-                            <div class="h-full aspect-[9/19] rounded-xl overflow-hidden border border-zinc-700/80 shadow-xl ${
-                              mIdx === 1 ? "scale-105 z-10 border-rose-600/50" : "opacity-85"
-                            }">
-                              <img src="${imgSrc}" alt="${project.title} screen ${mIdx + 1}" loading="lazy" class="w-full h-full object-cover object-top" />
-                            </div>
-                          `
-                          )
-                          .join("")}
-                      </div>
-                      <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity pointer-events-none"></div>`
-                    : project.coverImage && !project.isPlaceholder
-                    ? `<img
-                        src="${project.coverImage}"
-                        alt="${project.title}"
-                        loading="lazy"
-                        class="w-full h-full object-cover object-top group-hover:scale-[1.03] transition-transform duration-500"
-                      />
-                      <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent opacity-70 group-hover:opacity-40 transition-opacity"></div>`
-                    : `<div class="flex flex-col items-center justify-center text-center p-6">
-                        <div class="w-12 h-12 rounded-xl bg-zinc-800 border border-zinc-700 group-hover:border-rose-600/60 flex items-center justify-center text-rose-500 mb-3 transition-colors">
-                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
+          <div class="carousel-snap-slot">
+            <article
+              data-carousel-index="${index}"
+              onclick="handleCardClick('proj', ${index}, event)"
+              class="depth-carousel-item hardware-card rounded-2xl overflow-hidden flex flex-col justify-between cursor-pointer group select-none"
+            >
+              <div>
+                <!-- Project Image Preview / Placeholder -->
+                <div
+                  class="relative h-56 sm:h-64 bg-zinc-900 border-b border-zinc-800 overflow-hidden flex items-center justify-center"
+                >
+                  ${
+                    project.mobileShowcase && project.mobileShowcase.length
+                      ? `<div class="w-full h-full bg-zinc-900/95 flex items-center justify-center gap-3 px-6 pt-6 pb-2 group-hover:scale-[1.02] transition-transform duration-500">
+                          ${project.mobileShowcase
+                            .map(
+                              (imgSrc, mIdx) => `
+                              <div class="h-full aspect-[9/19] rounded-xl overflow-hidden border border-zinc-700/80 shadow-xl ${
+                                mIdx === 1 ? "scale-105 z-10 border-rose-600/50" : "opacity-85"
+                              }">
+                                <img src="${imgSrc}" alt="${project.title} screen ${mIdx + 1}" loading="lazy" class="w-full h-full object-cover object-top" />
+                              </div>
+                            `
+                            )
+                            .join("")}
                         </div>
-                        <span class="text-xs font-mono uppercase tracking-wider text-zinc-400">System Slot #0${index + 1} Preview</span>
-                        <span class="text-[11px] text-zinc-500 mt-1">Awaiting Project Deployment</span>
-                      </div>`
-                }
+                        <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity pointer-events-none"></div>`
+                      : project.coverImage && !project.isPlaceholder
+                      ? `<img
+                          src="${project.coverImage}"
+                          alt="${project.title}"
+                          loading="lazy"
+                          class="w-full h-full object-cover object-top group-hover:scale-[1.03] transition-transform duration-500"
+                        />
+                        <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent opacity-70 group-hover:opacity-40 transition-opacity"></div>`
+                      : `<div class="flex flex-col items-center justify-center text-center p-6">
+                          <div class="w-12 h-12 rounded-xl bg-zinc-800 border border-zinc-700 group-hover:border-rose-600/60 flex items-center justify-center text-rose-500 mb-3 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                          <span class="text-xs font-mono uppercase tracking-wider text-zinc-400">System Slot #0${index + 1} Preview</span>
+                          <span class="text-[11px] text-zinc-500 mt-1">Awaiting Project Deployment</span>
+                        </div>`
+                  }
 
-                <!-- Category Tag Pill -->
-                <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full text-xs font-medium bg-zinc-900/90 text-zinc-200 border border-zinc-700/80 backdrop-blur-md">
-                  ${project.category}
-                </span>
+                  <!-- Category Tag Pill -->
+                  <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full text-xs font-medium bg-zinc-900/90 text-zinc-200 border border-zinc-700/80 backdrop-blur-md">
+                    ${project.category}
+                  </span>
 
-                <!-- Slide Count Badge -->
-                <span class="absolute bottom-3 right-3 px-2.5 py-1 rounded-md text-[11px] font-mono bg-zinc-900/90 text-zinc-300 border border-zinc-700/80">
-                  ${project.isPlaceholder ? "BLUEPRINT" : `${project.gallery.length} SCREENSHOTS`}
-                </span>
-              </div>
+                  <!-- Slide Count Badge -->
+                  <span class="absolute bottom-3 right-3 px-2.5 py-1 rounded-md text-[11px] font-mono bg-zinc-900/90 text-zinc-300 border border-zinc-700/80">
+                    ${project.isPlaceholder ? "BLUEPRINT" : `${project.gallery.length} SCREENSHOTS`}
+                  </span>
+                </div>
 
-              <!-- Project Details -->
-              <div class="p-6">
-                <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-rose-400 transition-colors">
-                  ${project.title}
-                </h3>
-                <p class="mt-2.5 text-sm text-zinc-300 leading-relaxed">
-                  ${project.description}
-                </p>
+                <!-- Project Details -->
+                <div class="p-6">
+                  <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-rose-400 transition-colors">
+                    ${project.title}
+                  </h3>
+                  <p class="mt-2.5 text-sm text-zinc-300 leading-relaxed">
+                    ${project.description}
+                  </p>
 
-                <!-- Compact Pill Tags -->
-                <div class="mt-4 flex flex-wrap gap-1.5">
-                  ${project.tags
-                    .map(
-                      (tag) => `
-                      <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-zinc-900/75 text-zinc-400 border border-zinc-700/60">
-                        ${tag}
-                      </span>
-                    `
-                    )
-                    .join("")}
+                  <!-- Compact Pill Tags -->
+                  <div class="mt-4 flex flex-wrap gap-1.5">
+                    ${project.tags
+                      .map(
+                        (tag) => `
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-zinc-900/75 text-zinc-400 border border-zinc-700/60">
+                          ${tag}
+                        </span>
+                      `
+                      )
+                      .join("")}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Action Footer with Crimson "Open Gallery Slider →" Link -->
-            <div class="px-6 py-4 bg-zinc-900/45 border-t border-zinc-800/80 flex items-center justify-between">
-              <span class="text-[11px] font-mono text-zinc-500">BUILD // 0${index + 1}</span>
-              <button
-                type="button"
-                onclick="event.stopPropagation(); openProjectModal(${index});"
-                class="text-sm font-semibold text-rose-500 hover:text-rose-400 inline-flex items-center gap-1.5 group/btn focus:outline-none transition-colors"
-              >
-                <span>Open Gallery Slider</span>
-                <span class="transform group-hover/btn:translate-x-1 transition-transform">→</span>
-              </button>
-            </div>
-          </article>
+              <!-- Action Footer with Crimson "Open Gallery Slider →" Link -->
+              <div class="px-6 py-4 bg-zinc-900/45 border-t border-zinc-800/80 flex items-center justify-between">
+                <span class="text-[11px] font-mono text-zinc-500">BUILD // 0${index + 1}</span>
+                <button
+                  type="button"
+                  onclick="event.stopPropagation(); openProjectModal(${index});"
+                  class="text-sm font-semibold text-rose-500 hover:text-rose-400 inline-flex items-center gap-1.5 group/btn focus:outline-none transition-colors"
+                >
+                  <span>Open Gallery Slider</span>
+                  <span class="transform group-hover/btn:translate-x-1 transition-transform">→</span>
+                </button>
+              </div>
+            </article>
+          </div>
         `
         )
         .join("");
@@ -1083,7 +1131,7 @@
 
     /**
      * 3D CENTER-FOCUS DEPTH CAROUSEL CONTROLLER
-     * Keeps the currently viewed card scaled closer in the center while animating neighboring cards to the back.
+     * Locks the chosen card dead-center in the viewport while animating neighboring cards to the back.
      */
     const carouselControllers = {};
 
@@ -1116,9 +1164,12 @@
       const counterEl = document.getElementById(counterId);
       const prevBtn = document.getElementById(prevBtnId);
       const nextBtn = document.getElementById(nextBtnId);
+      const slots = Array.from(track.querySelectorAll(".carousel-snap-slot"));
       const cards = Array.from(track.querySelectorAll(".depth-carousel-item"));
 
       let activeIndex = 0;
+      let isProgrammaticScroll = false;
+      let programmaticTimer = null;
 
       // Render pagination dots
       dotsContainer.innerHTML = cards
@@ -1163,16 +1214,23 @@
         }
       }
 
+      function getTargetScrollLeft(index) {
+        const slot = slots[index];
+        if (!slot) return 0;
+        return slot.offsetLeft - (track.clientWidth - slot.offsetWidth) / 2;
+      }
+
       function detectCenteredCard() {
+        if (isProgrammaticScroll) return;
         const trackRect = track.getBoundingClientRect();
         const trackCenter = trackRect.left + trackRect.width / 2;
         let closestIdx = 0;
         let minDistance = Infinity;
 
-        cards.forEach((card, idx) => {
-          const rect = card.getBoundingClientRect();
-          const cardCenter = rect.left + rect.width / 2;
-          const dist = Math.abs(cardCenter - trackCenter);
+        slots.forEach((slot, idx) => {
+          const rect = slot.getBoundingClientRect();
+          const slotCenter = rect.left + rect.width / 2;
+          const dist = Math.abs(slotCenter - trackCenter);
           if (dist < minDistance) {
             minDistance = dist;
             closestIdx = idx;
@@ -1184,14 +1242,24 @@
         }
       }
 
-      function scrollToIndex(targetIndex) {
-        const clamped = (targetIndex + cards.length) % cards.length;
-        const targetCard = cards[clamped];
-        if (!targetCard) return;
-        const scrollLeft =
-          targetCard.offsetLeft - (track.clientWidth - targetCard.offsetWidth) / 2;
-        track.scrollTo({ left: scrollLeft, behavior: "smooth" });
+      function scrollToIndex(targetIndex, instant = false) {
+        const clamped = (targetIndex + slots.length) % slots.length;
+        const targetScrollLeft = getTargetScrollLeft(clamped);
+
+        isProgrammaticScroll = true;
+        if (programmaticTimer) clearTimeout(programmaticTimer);
+
         applyDepthClasses(clamped);
+
+        track.scrollTo({
+          left: targetScrollLeft,
+          behavior: instant ? "auto" : "smooth"
+        });
+
+        programmaticTimer = setTimeout(() => {
+          track.scrollTo({ left: getTargetScrollLeft(clamped), behavior: "auto" });
+          isProgrammaticScroll = false;
+        }, instant ? 50 : 460);
       }
 
       let ticking = false;
@@ -1209,6 +1277,10 @@
         { passive: true }
       );
 
+      window.addEventListener("resize", () => {
+        scrollToIndex(activeIndex, true);
+      });
+
       prevBtn.addEventListener("click", () => {
         scrollToIndex(activeIndex - 1);
       });
@@ -1224,8 +1296,8 @@
         scrollToIndex
       };
 
-      // Initialize first card as centered foreground card
-      applyDepthClasses(0);
+      // Initialize first card locked dead-center
+      scrollToIndex(0, true);
     }
 
     /**
