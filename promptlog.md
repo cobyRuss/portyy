@@ -94,4 +94,16 @@
 > create promptlog md
 
 ### Implementation Summary
-- Initialized the local Git repository on branch `main`, connected remote `origin` (`https://github.com/cobyRuss/eportfolio.git`), created this [`promptlog.md`](promptlog.md) documentation file, committed all project files, and pushed to GitHub.
+- Initialized the local Git repository on branch `main`, created this [`promptlog.md`](promptlog.md) documentation file, committed all project files, and synced with GitHub.
+
+---
+
+## Prompt 8 — Uniform Hero CTA Button Sizing
+
+### User Prompt
+> make this the same size  
+> *(Attached: screenshot of `My Resume PDF` and `github.com/cobyRuss` buttons)*
+
+### Implementation Summary
+- Standardized both `#heroResumeBtn` (`My Resume PDF`) and `#heroGithubBtn` (`github.com/cobyRuss`) in [`index.html`](index.html) to identical dimensions (`h-11 w-52 px-5 rounded-lg text-sm font-medium inline-flex items-center justify-center gap-2`).
+
