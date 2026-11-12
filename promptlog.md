@@ -237,6 +237,18 @@
 ### Implementation Summary
 - Upgraded `.depth-carousel-track` and [`setupDepthCarousel()`](index.html) from a linear strip to a **true circular 3D depth ring** (`grid-template-columns: var(--slot-w); justify-content: center` with all `.carousel-snap-slot` items stacked in `grid-area: 1 / 1` and positioned by shortest signed circular offset `getCircularOffset()`).
 - On both **Phone and PC**, when viewing item `01` (`CERT-01` or `Project 01`), the **last item** (`CERT-05` / `Project 04`, circular offset `-1`) visibly peeks on the **left** while the **2nd item** (`CERT-02` / `Project 02`, circular offset `+1`) visibly peeks on the **right** (and when viewing the last item, item `01` peeks on the right).
-- Set `--slot-w: 76%` on phones (`< 640px`) and computed exact horizontal peek offsets (`stepX = activeHalf - backHalf + peekPx`) so ~`40px` of both the previous and next cards peek out on the left and right edges of phone screens (`~240px` on PC) to invite swiping.
+- Set `--slot-w: 76%` on phones (`< 640px`) and computed horizontal peek offsets so both the previous and next cards peek out on the left and right edges of phone and PC screens to invite swiping.
+
+---
+
+## Prompt 20 — Solid Opaque Carousel Cards & Side-by-Side Neighbor Spacing Fix
+
+### User Prompt
+> both pc and phone has the problem where the cards on certificate and projects are transparent and text from behind shows/overlaps with texts in front  
+> *(Attached: 2 screenshots showing semi-transparent `.hardware-card` background and overlapping back cards behind the active card)*
+
+### Root Cause & Implementation Summary
+- **Opaque Matte Card Background:** `.depth-carousel-item` previously inherited `.hardware-card`'s semi-transparent `rgba(39, 39, 42, 0.5)` background, allowing text from cards behind to bleed through. Set `.depth-carousel-item` to a **100% solid opaque** matte charcoal background (`#232329 !important` on `.is-active-card` and `#1b1b20 !important` on `.is-back-card`, with `backdrop-filter: none !important`) so nothing behind can ever bleed through.
+- **Side-by-Side Neighbor Offset (`activeHalf + backHalf - edgeOverlap`):** Changed `stepX` in [`getStageMetrics()`](index.html) from `activeHalf - backHalf + peekPx` (which placed 80% of the neighbor cards underneath the center card) to `activeHalf + backHalf - edgeOverlap` (`edgeOverlap = 12px` on mobile, `24px` on PC), placing the previous/last card cleanly to the **left** of the active card and the next card cleanly to the **right**.
 
 

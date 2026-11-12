@@ -270,22 +270,28 @@
 
     .depth-carousel-item {
       width: 100%;
+      background-color: #212126 !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
       transition:
         border-color 0.35s ease,
-        box-shadow 0.45s ease;
+        box-shadow 0.45s ease,
+        background-color 0.35s ease;
     }
 
     .depth-carousel-item.is-active-card {
+      background-color: #232329 !important;
       border-color: rgba(225, 29, 72, 0.85);
       box-shadow:
-        0 24px 48px -12px rgba(0, 0, 0, 0.78),
+        0 24px 48px -12px rgba(0, 0, 0, 0.85),
         0 0 28px -6px rgba(225, 29, 72, 0.32),
         inset 0 1px 0 0 rgba(225, 29, 72, 0.22);
     }
 
     .depth-carousel-item.is-back-card {
+      background-color: #1b1b20 !important;
       border-color: rgba(63, 63, 70, 0.85);
-      box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.65);
+      box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.7);
     }
 
     .depth-carousel-item.is-back-card:hover {
@@ -1304,12 +1310,9 @@
         const farScale = 0.74;
         const activeHalf = slotW / 2;
         const backHalf = (slotW * backScale) / 2;
-        const sideSpace = Math.max(24, (viewportW - slotW) / 2);
-        const peekPx = isMobile
-          ? Math.max(30, sideSpace - 6)
-          : Math.min(240, Math.max(110, sideSpace - 24));
-        const stepX = Math.round(activeHalf - backHalf + peekPx);
-        const farStepX = Math.round(stepX * 1.45);
+        const edgeOverlap = isMobile ? 12 : 24;
+        const stepX = Math.round(activeHalf + backHalf - edgeOverlap);
+        const farStepX = Math.round(stepX * 1.65);
         return { isMobile, backScale, farScale, stepX, farStepX };
       }
 
@@ -1474,7 +1477,7 @@
           dragDeltaX = dx;
           const metrics = getStageMetrics();
           const dragDir = dx < 0 ? 1 : -1;
-          const dragSpan = metrics.isMobile ? 95 : Math.max(160, metrics.stepX * 0.95);
+          const dragSpan = Math.max(140, metrics.stepX);
           const dragProgress = Math.max(-0.92, Math.min(0.92, dx / dragSpan));
 
           slots.forEach((_, idx) => {
