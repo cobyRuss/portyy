@@ -215,4 +215,16 @@
 - Created [`assets/favicon.svg`](assets/favicon.svg) and embedded an inline SVG favicon (`<link rel="icon" type="image/svg+xml">`) in [`index.html`](index.html) featuring a bold crimson red (`#e11d48`) capital **`C`** on a matte dark charcoal (`#18181b`) hardware badge so browser tabs display the custom `C` icon instead of the default globe.
 - Increased the mobile Hero avatar size in [`#about`](index.html) from `w-24 h-24` (`96px`) to `w-36 h-36` (`144px`, keeping `sm:w-48 sm:h-48` on tablet/PC) to fill the vertical space above the profile photo on phone screens.
 
+---
+
+## Prompt 18 — Updated Resume PDF & Enlarged Mobile Contact Video/Social Icons
+
+### User Prompt
+> replace the resume with this. and on phones, last slide/contact; there is stille plenty of space to enlarge my gif and make the small icon links bigger
+
+### Implementation Summary
+- Replaced [`assets/resume/Russel_Tristan_Marzo_Resume.pdf`](assets/resume/Russel_Tristan_Marzo_Resume.pdf) with the newly uploaded resume PDF (`?v=2` cache-buster on `#heroResumeBtn`).
+- Enlarged the recessed looping video/GIF panel in [`#contact`](index.html) on phones from `w-52` (`208px`) to `w-full max-w-[300px]` (`300px` wide, aligned edge-to-edge with the `max-w-[300px]` email and phone chips).
+- Enlarged the 4 social channel icon buttons in [`renderFooter()`](index.html) from `w-9 h-9` (`36×36px`) with `16×16px` icons to `w-12 h-12` (`48×48px`) with `24×24px` (`[&>svg]:w-6 [&>svg]:h-6`) icons and wider `gap-3.5` spacing.
+
 
