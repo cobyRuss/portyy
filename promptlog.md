@@ -227,4 +227,16 @@
 - Enlarged the recessed looping video/GIF panel in [`#contact`](index.html) on phones from `w-52` (`208px`) to `w-full max-w-[300px]` (`300px` wide, aligned edge-to-edge with the `max-w-[300px]` email and phone chips).
 - Enlarged the 4 social channel icon buttons in [`renderFooter()`](index.html) from `w-9 h-9` (`36×36px`) with `16×16px` icons to `w-12 h-12` (`48×48px`) with `24×24px` (`[&>svg]:w-6 [&>svg]:h-6`) icons and wider `gap-3.5` spacing.
 
+---
+
+## Prompt 19 — True Circular 3D Depth Carousels with Peeking Neighbor Cards (Phone & PC)
+
+### User Prompt
+> on phones, make it so the next certificate/project would show a bit to encourage viewers to swipe, and on first certificate, previous one showing should be the last(include pc)
+
+### Implementation Summary
+- Upgraded `.depth-carousel-track` and [`setupDepthCarousel()`](index.html) from a linear strip to a **true circular 3D depth ring** (`grid-template-columns: var(--slot-w); justify-content: center` with all `.carousel-snap-slot` items stacked in `grid-area: 1 / 1` and positioned by shortest signed circular offset `getCircularOffset()`).
+- On both **Phone and PC**, when viewing item `01` (`CERT-01` or `Project 01`), the **last item** (`CERT-05` / `Project 04`, circular offset `-1`) visibly peeks on the **left** while the **2nd item** (`CERT-02` / `Project 02`, circular offset `+1`) visibly peeks on the **right** (and when viewing the last item, item `01` peeks on the right).
+- Set `--slot-w: 76%` on phones (`< 640px`) and computed exact horizontal peek offsets (`stepX = activeHalf - backHalf + peekPx`) so ~`40px` of both the previous and next cards peek out on the left and right edges of phone screens (`~240px` on PC) to invite swiping.
+
 

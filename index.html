@@ -138,7 +138,7 @@
       scrollbar-width: none;
     }
 
-    /* 3D Center-Focus Depth Carousel (Active card locked dead-center, others animated to the back) */
+    /* 3D Circular Center-Focus Depth Carousel (Active card locked dead-center, previous/last & next cards peeking on left/right) */
     .depth-carousel-viewport {
       position: relative;
       overflow: hidden;
@@ -154,15 +154,15 @@
     }
 
     .depth-carousel-track {
-      --slot-w: 84%;
+      --slot-w: 76%;
       position: relative;
-      display: flex;
+      display: grid;
+      grid-template-columns: var(--slot-w);
+      justify-content: center;
       align-items: stretch;
       width: 100%;
       padding-top: 0.5rem;
       padding-bottom: 0.5rem;
-      will-change: transform;
-      transition: transform 0.48s cubic-bezier(0.22, 1, 0.36, 1);
       cursor: grab;
     }
 
@@ -174,7 +174,6 @@
     }
 
     .depth-carousel-track.is-dragging {
-      transition: none !important;
       cursor: grabbing;
     }
 
@@ -251,56 +250,50 @@
       }
     }
 
-    /* Untransformed snap slot: guarantees 100% accurate center lock without scale/3D offset bugs */
+    /* Circular stage slot: all cards share the centered grid cell and fan out left/right in 3D */
     .carousel-snap-slot {
-      flex: 0 0 var(--slot-w);
-      width: var(--slot-w);
-      padding-inline: 0.375rem;
+      grid-area: 1 / 1;
+      width: 100%;
       display: flex;
+      transform-origin: center center;
+      will-change: transform, opacity, filter;
+      transition:
+        transform 0.48s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .carousel-snap-slot.no-slot-transition,
+    .depth-carousel-track.is-dragging .carousel-snap-slot {
+      transition: none !important;
     }
 
     .depth-carousel-item {
       width: 100%;
-      transform-origin: center center;
       transition:
-        transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-        opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-        filter 0.45s cubic-bezier(0.22, 1, 0.36, 1),
         border-color 0.35s ease,
         box-shadow 0.45s ease;
-      will-change: transform, opacity, filter;
     }
 
     .depth-carousel-item.is-active-card {
-      transform: scale(1);
-      opacity: 1;
-      filter: brightness(1);
-      z-index: 20;
-      border-color: rgba(225, 29, 72, 0.82);
+      border-color: rgba(225, 29, 72, 0.85);
       box-shadow:
-        0 24px 48px -12px rgba(0, 0, 0, 0.75),
-        0 0 28px -6px rgba(225, 29, 72, 0.3),
-        inset 0 1px 0 0 rgba(225, 29, 72, 0.2);
+        0 24px 48px -12px rgba(0, 0, 0, 0.78),
+        0 0 28px -6px rgba(225, 29, 72, 0.32),
+        inset 0 1px 0 0 rgba(225, 29, 72, 0.22);
     }
 
     .depth-carousel-item.is-back-card {
-      transform: scale(0.84);
-      opacity: 0.42;
-      filter: brightness(0.68);
-      z-index: 10;
+      border-color: rgba(63, 63, 70, 0.85);
+      box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.65);
     }
 
     .depth-carousel-item.is-back-card:hover {
-      opacity: 0.68;
-      filter: brightness(0.85);
-      border-color: rgba(225, 29, 72, 0.45);
+      border-color: rgba(225, 29, 72, 0.5);
     }
 
     .depth-carousel-item.is-far-card {
-      transform: scale(0.76);
-      opacity: 0.22;
-      filter: brightness(0.55);
-      z-index: 5;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -1264,9 +1257,11 @@
       const nextBtn = document.getElementById(nextBtnId);
       const slots = Array.from(track.querySelectorAll(".carousel-snap-slot"));
       const cards = Array.from(track.querySelectorAll(".depth-carousel-item"));
+      const total = slots.length;
 
       let activeIndex = 0;
       let suppressClickUntil = 0;
+      const lastOffsets = new Array(total).fill(0);
 
       // Render pagination dots
       dotsContainer.innerHTML = cards
@@ -1286,20 +1281,85 @@
 
       const dotButtons = Array.from(dotsContainer.querySelectorAll("button"));
 
-      function applyDepthClasses(centerIdx) {
-        activeIndex = centerIdx;
-        cards.forEach((card, idx) => {
-          const distance = Math.abs(idx - centerIdx);
-          card.classList.remove("is-active-card", "is-back-card", "is-far-card");
-          if (distance === 0) {
-            card.classList.add("is-active-card");
-          } else if (distance === 1) {
-            card.classList.add("is-back-card");
-          } else {
-            card.classList.add("is-far-card");
-          }
-        });
+      /**
+       * Compute shortest signed circular distance from centerIdx in [-total/2, +total/2].
+       * When centerIdx = 0 (Card 01), the last card (total - 1) has offset = -1 (peeking on the left),
+       * and Card 02 (index 1) has offset = +1 (peeking on the right).
+       */
+      function getCircularOffset(idx, centerIdx, directionHint = 1) {
+        let diff = (idx - centerIdx) % total;
+        if (diff > total / 2) diff -= total;
+        if (diff < -total / 2) diff += total;
+        if (total % 2 === 0 && Math.abs(diff) === total / 2) {
+          diff = directionHint < 0 ? -total / 2 : total / 2;
+        }
+        return diff;
+      }
 
+      function getStageMetrics() {
+        const viewportW = viewport.clientWidth || window.innerWidth;
+        const slotW = (slots[0] && slots[0].offsetWidth) || Math.round(viewportW * 0.76);
+        const isMobile = window.innerWidth < 640;
+        const backScale = isMobile ? 0.88 : 0.85;
+        const farScale = 0.74;
+        const activeHalf = slotW / 2;
+        const backHalf = (slotW * backScale) / 2;
+        const sideSpace = Math.max(24, (viewportW - slotW) / 2);
+        const peekPx = isMobile
+          ? Math.max(30, sideSpace - 6)
+          : Math.min(240, Math.max(110, sideSpace - 24));
+        const stepX = Math.round(activeHalf - backHalf + peekPx);
+        const farStepX = Math.round(stepX * 1.45);
+        return { isMobile, backScale, farScale, stepX, farStepX };
+      }
+
+      function applySlotPose(idx, relOffset, metrics) {
+        const slot = slots[idx];
+        const card = cards[idx];
+        if (!slot || !card) return;
+
+        const { isMobile, backScale, farScale, stepX, farStepX } = metrics;
+        const absRel = Math.abs(relOffset);
+        const sign = relOffset < 0 ? -1 : 1;
+
+        const tx =
+          absRel <= 1
+            ? relOffset * stepX
+            : sign * (stepX + (absRel - 1) * (farStepX - stepX));
+
+        const scale =
+          absRel <= 1
+            ? 1 - absRel * (1 - backScale)
+            : Math.max(farScale, backScale - (absRel - 1) * (backScale - farScale));
+
+        const backOpacity = isMobile ? 0.58 : 0.52;
+        const opacity =
+          absRel <= 1
+            ? 1 - absRel * (1 - backOpacity)
+            : Math.max(0, backOpacity * (1 - (absRel - 1) * 1.15));
+
+        const bright =
+          absRel <= 1 ? 1 - absRel * 0.26 : 0.6;
+
+        const zIndex = absRel < 0.45 ? 30 : absRel < 1.45 ? (relOffset < 0 ? 21 : 20) : 5;
+
+        slot.style.transform = `translate3d(${Math.round(tx)}px, 0, 0) scale(${scale.toFixed(3)})`;
+        slot.style.opacity = opacity.toFixed(3);
+        slot.style.filter = `brightness(${bright.toFixed(2)})`;
+        slot.style.zIndex = String(zIndex);
+        slot.style.pointerEvents = absRel > 1.35 ? "none" : "auto";
+
+        card.classList.remove("is-active-card", "is-back-card", "is-far-card");
+        if (absRel < 0.45) {
+          card.classList.add("is-active-card");
+        } else if (absRel < 1.45) {
+          card.classList.add("is-back-card");
+        } else {
+          card.classList.add("is-far-card");
+        }
+      }
+
+      function updateIndicators(centerIdx) {
         dotButtons.forEach((dot, idx) => {
           dot.className = `h-1.5 rounded-full transition-all duration-300 ${
             idx === centerIdx ? "w-6 bg-rose-600" : "w-2 bg-zinc-700 hover:bg-zinc-500"
@@ -1311,38 +1371,72 @@
         }
       }
 
-      function getTargetTranslateX(index) {
-        const slot = slots[index];
-        if (!slot) return 0;
-        const viewportCenter = viewport.clientWidth / 2;
-        const slotCenter = slot.offsetLeft + slot.offsetWidth / 2;
-        return Math.round(viewportCenter - slotCenter);
-      }
+      function scrollToIndex(targetIndex, instant = false, explicitDirection = null) {
+        const wrappedIndex = ((targetIndex % total) + total) % total;
+        const rawStep = getCircularOffset(wrappedIndex, activeIndex, 1);
+        const direction =
+          explicitDirection !== null ? explicitDirection : rawStep >= 0 ? 1 : -1;
 
-      function scrollToIndex(targetIndex, instant = false) {
-        const wrappedIndex = ((targetIndex % slots.length) + slots.length) % slots.length;
-        applyDepthClasses(wrappedIndex);
-        const tx = getTargetTranslateX(wrappedIndex);
+        const metrics = getStageMetrics();
 
         if (instant) {
-          track.classList.add("is-dragging");
-          track.style.transform = `translate3d(${tx}px, 0, 0)`;
+          slots.forEach((slot) => slot.classList.add("no-slot-transition"));
+          slots.forEach((_, idx) => {
+            const newRel = getCircularOffset(idx, wrappedIndex, direction);
+            lastOffsets[idx] = newRel;
+            applySlotPose(idx, newRel, metrics);
+          });
           void track.offsetHeight;
-          track.classList.remove("is-dragging");
+          slots.forEach((slot) => slot.classList.remove("no-slot-transition"));
         } else {
-          track.classList.remove("is-dragging");
-          track.style.transform = `translate3d(${tx}px, 0, 0)`;
+          // Pre-stage any hidden card that needs to enter from the opposite side so it never crosses the center
+          let needsReflow = false;
+          slots.forEach((slot, idx) => {
+            const oldRel = lastOffsets[idx];
+            const newRel = getCircularOffset(idx, wrappedIndex, direction);
+            if (Math.abs(newRel) === 1 && oldRel * newRel < 0 && Math.abs(oldRel) >= 1.5) {
+              slot.classList.add("no-slot-transition");
+              applySlotPose(idx, newRel * 2, metrics);
+              needsReflow = true;
+            } else if (Math.abs(oldRel) >= 1.5 && Math.abs(newRel) >= 1.5 && oldRel * newRel < 0) {
+              slot.classList.add("no-slot-transition");
+              needsReflow = true;
+            }
+          });
+
+          if (needsReflow) {
+            void track.offsetHeight;
+          }
+
+          slots.forEach((slot, idx) => {
+            const oldRel = lastOffsets[idx];
+            const newRel = getCircularOffset(idx, wrappedIndex, direction);
+            const isHiddenSwap =
+              Math.abs(oldRel) >= 1.5 && Math.abs(newRel) >= 1.5 && oldRel * newRel < 0;
+
+            if (!isHiddenSwap) {
+              slot.classList.remove("no-slot-transition");
+            }
+            lastOffsets[idx] = newRel;
+            applySlotPose(idx, newRel, metrics);
+            if (isHiddenSwap) {
+              void slot.offsetHeight;
+              slot.classList.remove("no-slot-transition");
+            }
+          });
         }
+
+        activeIndex = wrappedIndex;
+        updateIndicators(wrappedIndex);
       }
 
-      // Touch & Pointer Swipe Handling (locks center on every swipe and wraps last -> 01)
+      // Touch & Pointer Swipe Handling (circular ring drag & wrap)
       let isDragging = false;
       let isHorizontalSwipe = null;
       let startX = 0;
       let startY = 0;
       let startTime = 0;
       let dragDeltaX = 0;
-      let baseTranslateX = 0;
 
       function onDragStart(clientX, clientY) {
         isDragging = true;
@@ -1351,7 +1445,6 @@
         startY = clientY;
         startTime = performance.now();
         dragDeltaX = 0;
-        baseTranslateX = getTargetTranslateX(activeIndex);
       }
 
       function onDragMove(clientX, clientY, event) {
@@ -1379,12 +1472,17 @@
             event.preventDefault();
           }
           dragDeltaX = dx;
-          // Subtle resistance when pulling past first or last card before wrap release
-          const isPullingPastEdge =
-            (activeIndex === 0 && dx > 0) ||
-            (activeIndex === slots.length - 1 && dx < 0);
-          const factor = isPullingPastEdge ? 0.55 : 0.88;
-          track.style.transform = `translate3d(${Math.round(baseTranslateX + dx * factor)}px, 0, 0)`;
+          const metrics = getStageMetrics();
+          const dragDir = dx < 0 ? 1 : -1;
+          const dragSpan = metrics.isMobile ? 95 : Math.max(160, metrics.stepX * 0.95);
+          const dragProgress = Math.max(-0.92, Math.min(0.92, dx / dragSpan));
+
+          slots.forEach((_, idx) => {
+            const baseRel = getCircularOffset(idx, activeIndex, dragDir);
+            const liveRel = baseRel + dragProgress;
+            lastOffsets[idx] = liveRel;
+            applySlotPose(idx, liveRel, metrics);
+          });
         }
       }
 
@@ -1410,14 +1508,14 @@
         const velocityThreshold = 0.22;
 
         if (dx < -swipeThreshold || velocity < -velocityThreshold) {
-          // Swiped left (Next): if on last card, wraps back to 0 (Card 01)
-          scrollToIndex(activeIndex + 1);
+          // Swiped left (Next): advances and wraps last -> 01
+          scrollToIndex(activeIndex + 1, false, 1);
         } else if (dx > swipeThreshold || velocity > velocityThreshold) {
-          // Swiped right (Previous): if on first card, wraps to last card
-          scrollToIndex(activeIndex - 1);
+          // Swiped right (Previous): goes back and wraps 01 -> last
+          scrollToIndex(activeIndex - 1, false, -1);
         } else {
-          // Re-lock current card dead-center
-          scrollToIndex(activeIndex);
+          // Snap current card back to dead-center
+          scrollToIndex(activeIndex, false, 0);
         }
       }
 
@@ -1461,7 +1559,7 @@
 
       track.addEventListener("dragstart", (e) => e.preventDefault());
 
-      // Horizontal trackpad wheel support (wraps last -> 01 as well)
+      // Horizontal trackpad wheel support (wraps circularly in both directions)
       let wheelLocked = false;
       viewport.addEventListener(
         "wheel",
@@ -1471,9 +1569,9 @@
             if (wheelLocked) return;
             wheelLocked = true;
             if (e.deltaX > 0) {
-              scrollToIndex(activeIndex + 1);
+              scrollToIndex(activeIndex + 1, false, 1);
             } else {
-              scrollToIndex(activeIndex - 1);
+              scrollToIndex(activeIndex - 1, false, -1);
             }
             setTimeout(() => {
               wheelLocked = false;
@@ -1502,11 +1600,11 @@
       }
 
       prevBtn.addEventListener("click", () => {
-        scrollToIndex(activeIndex - 1);
+        scrollToIndex(activeIndex - 1, false, -1);
       });
 
       nextBtn.addEventListener("click", () => {
-        scrollToIndex(activeIndex + 1);
+        scrollToIndex(activeIndex + 1, false, 1);
       });
 
       carouselControllers[type] = {
@@ -1519,7 +1617,7 @@
         }
       };
 
-      // Initialize first card locked dead-center
+      // Initialize first card locked dead-center with the last card peeking on the left and 2nd card peeking on the right
       scrollToIndex(0, true);
     }
 
